@@ -1,5 +1,4 @@
-import sys, random
-import re, os
+import sys, re, os
 def Placal(): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
     hardest = 1 #по название доложно понятно быть)
     try:
@@ -47,7 +46,7 @@ def Placal(): #Писал пиздец давно, так-что помню то
 
 def clear(): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
-    print("Версия ALTA v1.3 by Prosto_Maksim")
+    print("Версия ALTA V2.0 by Prosto_Maksim")
 def lvlcal(F,ALLT): #На время просто через копипасту сделано, убранно только выбор фпс в этом коде)
     def hrub(E): #Осталось для соместимости Раньше все было в rub
         y = 0
@@ -64,7 +63,7 @@ def lvlcal(F,ALLT): #На время просто через копипасту 
             return frame
         else:
             return 0
-    def rub(Level): #Самое главное)
+    def rub(Level,TPS): #Самое главное)
         protection = 0 #Ставить переменную(для проверки возможности лвла))
         score = 0
         for timing in Level:
@@ -73,9 +72,9 @@ def lvlcal(F,ALLT): #На время просто через копипасту 
                     protection = 1 #Записывает ту переменную 1
             except ValueError:
                 return 0
-            #        - imp- 240   120  80  60   48  40  34  30 26 - фреймы
-            Eball = [99999,10000,5000,2500,1250,625,312,156,78,39] #Таблица выдочей ОЧЕЙ) новая
-            score = score + Eball[int(timing)]
+            #  - баллы(240)  240  120  80   60  48    40   34   30   26
+            Eball = [99999,10000,5000,3333,2500,2000,1666,1428,1250,1111] #Таблица выдочей ОЧЕЙ) новая
+            score = score + Eball[int(timing)] / (240/TPS) #считает балы и заодно адаптирует таблицу сверху для всех фпс)
         if protection != 1: #если 0 - выдать результат, если нет послать нах)
             return score
         else:
@@ -100,13 +99,14 @@ def lvlcal(F,ALLT): #На время просто через копипасту 
             print("\n")
     except KeyboardInterrupt:
         sys.exit()
-    print("Версия ALTA v1.3 by Prosto_Maksim")
+    print("Версия ALTA V2.0 by Prosto_Maksim")
     print("Тайминги уровня:" + str(ALLT))
     print("Фпс измерения:" + str(F))
     print("")
-    T = rub(ALLT) #Коф тайминга
+    raw = rub(ALLT,F) #сырые балы
     C = ppy(ALLT) #скок таймингов
-    raw = (T * F) #тайминги на фпс
+   
+    #raw = (T * F) #тайминги на фпс
     try:
         frame = F/hrub(ALLT) #еще осколок от старой версии) Считает средний фрейм по больнице
     except ZeroDivisionError:
@@ -118,13 +118,13 @@ def lvlcal(F,ALLT): #На время просто через копипасту 
         return 0
     MC = 1000 / frame #Считает средний тайминг по больнице
     print("Лвл как " + str(C) + " Фреймов на " + str(round(frame, 2)) + "фпс(" + str(round(MC, 2)) + ")Мс")
-    result = raw / 27000
+    result = raw / 225 #выравнивание балов по TCC1
     print("")
     print("PP:" + str(round(result, 1)))
 
 
 TPS = 240 #фпс по умолчанию
-print("Версия ALTA v1.3 by Prosto_Maksim")
+print("Версия ALTA V2.0 by Prosto_Maksim")
 print("Для помощи напишите help")
 while 1 == 1:
     try:
