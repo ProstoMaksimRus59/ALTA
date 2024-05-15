@@ -1,5 +1,6 @@
 
-![logoalta](https://github.com/ProstoMaksimRus59/ALTA/assets/102693495/637ddec2-eeed-457f-93bc-64de0a068ddf)
+![v2logoalta](https://github.com/ProstoMaksimRus59/ALTA/assets/102693495/505ff144-1093-4abd-bf47-5bc47f99aa60)
+
 
 
 Математический расчет сложности для Geometry Dash
