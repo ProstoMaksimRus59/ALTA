@@ -10,6 +10,8 @@ C Osu!(https://github.com/ppy) подобным методом
 Для ее работы нужна заранее устоновленный GDMegaOverlay(https://github.com/maxnut/GDMegaOverlay)
 
 За идею спасибо SpaceKZ(https://www.youtube.com/@spaceKZ1)
+
+Гайд - https://youtu.be/mJTOHU9eb0w?si=chv7xQWFy7MvxHmB
 .
 
 .
