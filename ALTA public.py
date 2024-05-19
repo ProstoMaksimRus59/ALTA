@@ -268,7 +268,7 @@ while 1 == 1:
                 sys.exit()
             if TPS == 0: #cброс
                 print("сброшено!")
-                TPS = standard
+                TPS = int(standard)
             print("Фпс поставлен на " + str(TPS))
         
         case "fps.set":
