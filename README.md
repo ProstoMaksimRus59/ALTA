@@ -11,7 +11,7 @@ C Osu!(https://github.com/ppy) подобным методом
 
 За идею спасибо SpaceKZ(https://www.youtube.com/@spaceKZ1)
 
-Гайд - https://youtu.be/mJTOHU9eb0w?si=chv7xQWFy7MvxHmB
+Гайд - https://youtu.be/mJTOHU9eb0w?si=chv7xQWFy7MvxHmB (Частично устарел)
 
 .
 
