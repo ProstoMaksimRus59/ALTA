@@ -9,7 +9,7 @@ C Osu!(https://github.com/ppy) подобным методом
 
 Для ее работы нужна заранее устоновленный GDMegaOverlay(https://github.com/maxnut/GDMegaOverlay)
 
-За идею спасибо SpaceKZ(https://www.youtube.com/@spaceKZ1)
+За идею спасибо SpaceKZ (и за balcal)(https://www.youtube.com/@spaceKZ1)
 
 Гайд - https://youtu.be/mJTOHU9eb0w?si=chv7xQWFy7MvxHmB (Частично устарел)
 
