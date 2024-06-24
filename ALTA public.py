@@ -1,10 +1,10 @@
-import sys, re, os, shutil,random,zipfile,statistics,math
+import sys, re, os, shutil, random, zipfile, statistics, math
 
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA V3.4 by Prosto_Maksim")
-print("Загрузка.    1/15")
+        print("Версия ALTA V3.5 by Prosto_Maksim")
+print("Загрузка.    1/22")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
     hardest = 1 #по название доложно понятно быть)
@@ -66,7 +66,7 @@ def Placal(folder,data): #Писал пиздец давно, так-что по
                     print("все!")
                 file.close()
 clear("0")
-print("Загрузка..   2/15")
+print("Загрузка..   2/22")
 
 def lvlcal(fps,Timings,seting):
     ReferenceFps = 240 #главный фпс
@@ -77,7 +77,6 @@ def lvlcal(fps,Timings,seting):
     HardestC = 99999999 #Сетчик самого сложного тайминга
     Mior = 0 #ср тайминг
     FreeC = 0 #Сетчик самого легкого тайминга
-
     if Timings == "0": #если ничего нет, то повторно попросить вести тайминги.
         print("\nПометка - Невидимые тайминги = сам тайминг / 2(В округление больше сторону)")
         print("Пометка - Любые клики которым просто достаточно нажать заранее - не должны учитываться никак")
@@ -92,7 +91,7 @@ def lvlcal(fps,Timings,seting):
             return 0
         except KeyboardInterrupt:
             sys.exit()
-    
+    Timings = str(Timings)
     for Timing in Timings.split(";"): #Делаем масив по ; и сразу заходим в цикл for
         try:
             Points = Points + ForReferencePoints / int(Timing) #считает балы за тайминг
@@ -116,18 +115,21 @@ def lvlcal(fps,Timings,seting):
     Points = Points / (ReferenceFps / int(fps)) #Выравнивает балы по фпс
     result = Points / Compression #Выравнивем по эталону
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
-    print("\nВерсия ALTA V3.4 by Prosto_Maksim")
-    print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
-    print("Фпс измерения:" + str(fps) + "\n")
-    print("Самый сложный тайминг:" + str(HardestC)+"кадр")
-    print("Средний тайминг:" + str(Mior)+"кадр")
-    print("Самый простой тайминг:" + str(FreeC)+"кадр\n")
+    if seting != "2":
+        print("\nВерсия ALTA V3.5 by Prosto_Maksim")
+        print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
+        print("Фпс измерения:" + str(fps) + "\n")
+        print("Самый сложный тайминг:" + str(HardestC)+"кадр")
+        print("Средний тайминг:" + str(Mior)+"кадр")
+        print("Самый простой тайминг:" + str(FreeC)+"кадр\n")
     if seting == "1": #Вывод баланса
         balanceKZ(fps,Timings,"1")
-    print("pp:" + str(round(result, 1)) + "\n")
+    if seting != "2":
+        print("pp:" + str(round(result, 1)) + "\n")
+    return str(round(result, 1))
 
 clear("0")
-print("Загрузка...   3/15")
+print("Загрузка...   3/22")
 
 def settingfiles(mode, typE, Number): #Отвечает за сохранения настроек в файл.
     
@@ -136,6 +138,7 @@ def settingfiles(mode, typE, Number): #Отвечает за сохранени�
             print("Ошибка чтения файла настроек")
             print("Выполнен его сброс")
             print("Ошибка была по:" + str(typE))
+            input()
         Filesetting = open('setting.alta', 'w') #Создает стоковый файл
         Filesetting.write("FPS:240 \n")
         Filesetting.write("Clear:0 \n")
@@ -219,7 +222,7 @@ def settingfiles(mode, typE, Number): #Отвечает за сохранени�
                   Filesetting.write("lvlbanace:" + str(Number) + "\n")
                   Filesetting.close()  
 clear("0")
-print("Загрузка.     4/15")
+print("Загрузка.     4/22")
 
 def conv(Timings):
     coun = len(str(Timings))
@@ -233,7 +236,7 @@ def conv(Timings):
         coun = coun - 1
 
 clear("0")
-print("Загрузка..    5/15")
+print("Загрузка..    5/22")
 
 def Victors(lvl):
     try:
@@ -241,8 +244,9 @@ def Victors(lvl):
     except FileNotFoundError:
         print("Датабаза не найдена")
         return 0
-    
+    all = []
     altapl = list(filter(lambda x: x.endswith('.altapl'), files)) #фильтр форматов
+    print("Лвл:" + str(lvl))
     print("Имеют его>", end=" ")
     
     for file in altapl:
@@ -252,11 +256,13 @@ def Victors(lvl):
             Scan = data.readline().rstrip('\n')
             Scan = Scan.split(":")[0]
             if Scan.lower() == lvl.lower():
-                print(file.split(".altapl")[0] + ",", end=" ") #Вывод всех у кого есть лвл в пройденных 
+                print(file.split(".altapl")[0] + ",", end=" ") #Вывод всех у кого есть лвл в пройденных
+                all.append(file.split(".altapl")[0])
     print("\n")
+    return all
 
 clear("0")
-print("Загрузка...   6/15")
+print("Загрузка...   6/22")
 
 standard = settingfiles("read","fps",1) #фпс по умолчанию
 autoclear = settingfiles("read", "clear", 1) #какой режим чистки
@@ -264,14 +270,10 @@ KZbalance = settingfiles("read", "lvlbanace", 1)
 TPS = int(standard) #Переносится стандартный фпс в переменную где с ним будут работать.
 
 clear("0")
-print("Загрузка.     7/15")
+print("Загрузка.     7/22")
 
 def addlvl():
-    try:
-        data = open("Base/lvldatabase.altalvl", 'a')
-    except FileNotFoundError:
-        print("Датабазa не найдена")
-        return 0
+
     try:
         print("Название лвла") #Это почти как заглушка, потом будет что-то нормальное)
         com1 = input(">")
@@ -283,26 +285,41 @@ def addlvl():
         com4 = input(">")
         print("FPS")
         com5 = input(">")
-        print("Баланс>")
-        fan = input(">")
-        print("PP у лвла")
-        com6 = input(">")
+        pp = lvlcal(com5,com4,"2")
+        if pp == 0:
+            return 0
+        fan = balanceKZ(int(com5),com4,"2")
     except KeyboardInterrupt:
         sys.exit()
+    
+    scan = 0
+    data = open("Base/lvldatabase.altalvl", 'r')
+    while scan == 0:
+        lvlscan = data.readline().rstrip('\n')
+        if lvlscan.lower() == com1.lower():
+            print("Он уже в базе")
+            return 0
+        if lvlscan == "":
+            scan = 1
+    data.close()
+    try:
+        data = open("Base/lvldatabase.altalvl", 'a')
+    except FileNotFoundError:
+        return 0
     data.write("" + str(com1.lower()))
     data.write("\nAuthor(S):" + str(com2.lower()))
     data.write("\nVerification:" + str(com3.lower()))
     data.write("\nTimings:" + str(com4.lower()))
     data.write("\nFPS:" + str(com5.lower()))
     data.write("\nbalance:" + str(fan.lower()))
-    data.write("\nPP:" + str(com6.lower()))
+    data.write("\nPP:" + str(pp.lower()))
     data.write("\nend\n")
-    data.close
+    data.close()
 
 clear("0")
-print("Загрузка..    8/15")
+print("Загрузка..    8/22")
 
-def infolvl(lvl):
+def infolvl(lvl,setmode):
     good = 0
     try:
         data = open("Base/lvldatabase.altalvl", 'r')
@@ -316,24 +333,32 @@ def infolvl(lvl):
             info = 6
             while info != 0:
                 info = info - 1
-                print(data.readline().rstrip('\n').lower())
+                lvlinfo = data.readline().rstrip('\n').lower()
+                if setmode == "1":
+                    print(lvlinfo)
+                if info == 0:
+                    return lvlinfo.split(":")[-1]
                 scan = 1
                 good = 1
         if lvlscan == "":
             scan = 1
     
     if good == 0:
-        print("лвл не Найден в базе")
+        if setmode == "1":
+            print("лвл не Найден в базе")
+        return 0
     data.close()
 
 clear("0")
-print("Загрузка...   9/15")
+print("Загрузка...   9/22")
 
-def addvict(Player,lvld,pp):
+def addvict(Player,lvld):
     try:
-        pp = float(pp)
+        pp = float(infolvl(lvld, "0"))
     except ValueError:
         print("Точно вел пп?")
+        return 0
+    if pp == 0:
         return 0
     pp = round(pp)
     Player = Player + ".altapl"
@@ -345,6 +370,10 @@ def addvict(Player,lvld,pp):
         return 0
     name = data.readline()
     lvl = data.readlines()
+    for scan in lvl:
+        if scan.split(":")[0] == lvld:
+            print("У него уже он пройден")
+            return 0
     hardest = 0
     Comlit = 1
     
@@ -381,7 +410,7 @@ def addvict(Player,lvld,pp):
     data.close()
 
 clear("0")
-print("Загрузка.     10/15")
+print("Загрузка.     10/22")
 
 def createdb():
     files = os.listdir() #Проверка на наличие уже датабазы
@@ -392,7 +421,7 @@ def createdb():
                 com = input("Вы уверенны удалить старую базу??(напишите в ответ>" + str(antidelete) + ") >" )
             except KeyboardInterrupt:
                 sys.exit()
-            if int(com) == antidelete:
+            if com == str(antidelete):
                 shutil.rmtree("Base")
                 print("Датабаза удаленна!")
             else:
@@ -404,7 +433,7 @@ def createdb():
     print("Датабаза создана!")
 
 clear("0")
-print("Загрузка..    11/15")
+print("Загрузка..    11/22")
 
 def addpla(pla):
     files = os.listdir("Base/")
@@ -420,7 +449,7 @@ def addpla(pla):
     print("Игрок добавлен")
 
 clear("0")
-print("Загрузка...   12/15")
+print("Загрузка...   12/22")
 
 def loaddb():
     files = os.listdir() #Проверка на наличие уже датабазы
@@ -431,7 +460,7 @@ def loaddb():
                 com = input("Вы уверенны удалить старую базу??(напишите в ответ>" + str(antidelete) + ") >" )
             except KeyboardInterrupt:
                 sys.exit()
-            if int(com) == antidelete:
+            if com == str(antidelete):
                 shutil.rmtree("Base")
                 print("Датабаза удаленна!")
             else:
@@ -451,7 +480,7 @@ def loaddb():
     print("Датабаза загружена!")
 
 clear("0")
-print("Загрузка...   13/15")
+print("Загрузка...   13/22")
 
 def savedb():
     try:
@@ -472,7 +501,7 @@ def savedb():
     print("Датабаза сохранена!")
 
 clear("0")
-print("Загрузка.     14/15")
+print("Загрузка.     14/22")
 
 def infopla(pla):
     if pla == "0":
@@ -505,9 +534,56 @@ def infopla(pla):
         pla = pla + '.altapl'
         
         Placal("Base/" + pla, "1")
+def plalvlcomm(requirements): #Для безопастности вынес это как функцию
+            if requirements == "-l": #если лвл
+                print("Топ лвлов>")
+                alllvl = scanallvl() #Получает все лвла
+                pplvl = []
+                for lvl in alllvl:
+                    pplvl.append(infolvl(lvl,"0")) #Получает пп
+                top(alllvl,pplvl) #Делает топ
+            
+            if requirements == "-p":
+                print("Топ игроков>")
+                Ramdonmane = os.listdir("Base/") #ищет в базе игроков
+                Ramdonmane = filter(lambda x: x.endswith('.altapl'), Ramdonmane)
+                pplvl = []
+                alllvl = []
+                for plaer in Ramdonmane:
+                    wfr = plaer.rstrip(".altapl")
+                    alllvl.append(wfr)
+                    pplvl.append(round(tophelper(plaer)[0])) #Получает пп
+                top(alllvl,pplvl)#Делает топ
 
 clear("0")
-print("Загрузка..     15/15")
+print("Загрузка..     15/22")
+
+def tophelper(plaer):
+        
+        hardest = 1 #по название доложно понятно быть)
+        folder = "base/" + plaer.replace('"', '')
+        file = open(folder, 'r')
+        pp = 0
+        Scan = 1
+        plarr = []
+        pparr = []
+        plarr.append(file.readline().rstrip('\n')) #Показывает какой игрок
+    
+        while Scan == 1:
+            pp1 = re.findall(r'\d+', file.readline().rstrip(' ').rstrip('\n').rstrip(':'))
+    
+            lvl = int(pp1[-1]) #для удобства (чтоб не по сто раз писать [0]) + все таки я написал -1 и теперь можно и арабские цифрами позоваться
+    
+            if lvl != 0:
+                pp = pp + lvl * 0.85**(hardest-1) #Формула расчета пп
+                hardest = hardest + 1
+    
+            if lvl == 0:
+                Scan = 0
+                pparr.append(pp)
+        return pparr
+clear("0")
+print("Загрузка...    16/22")
 
 def balanceKZ(fps,sequence,lvlcalmode): #Не мое, так-что писать ничего не буду)
     score = 0
@@ -525,14 +601,157 @@ def balanceKZ(fps,sequence,lvlcalmode): #Не мое, так-что писать
     points = score/len(list)*10
     if points < 0:
         points=0
-    if lvlcalmode != "1":
-        print('Ср тайминг:',str(round(statistics.mean(list),2)),'кадр')
-    print('Баланс:',str(round(points,2))+'/10')
+    if lvlcalmode != "2":
+        if lvlcalmode != "1":
+            print('Ср тайминг:',str(round(statistics.mean(list),2)),'кадр')
+        print('Баланс:',str(round(points,2))+'/10')
+    return str(round(points,2))+'/10'
+
+clear("0")
+print("Загрузка.      17/22")
+
+def scanpplvl(lvl):
+    pp = lvlcal(scanerpla(lvl,"4"),scanerpla(lvl,"3"),"2")
+    lvlcha(lvl,"5", pp)
+    lvlcha(lvl,"4", str(balanceKZ(int(scanerpla(lvl,"4")),str(scanerpla(lvl,"3")),"2")))
+
+    allvict = Victors(lvl)
+    for plar in allvict:
+        deleteplalvl(plar,lvl)
+        addvict(plar,lvl)
+
+clear("0")
+print("Загрузка..     18/22")
+
+def deleteplalvl(pla, lvl):
+    pla = pla + ".altapl"
+    
+    try:
+        data = open("Base/" + pla, 'r')
+    except FileNotFoundError:
+        print("такого игрока нет в датабазе или самой датабазы")
+        return 0
+    
+    name = data.readline()
+    lvlset = data.readlines()
+    coutler = 0
+    ok = 1
+    antiass = 0
+    
+    while  ok == 1:
+        for scan in lvlset:
+            if scan.split(":")[0] == lvl:
+                ok = coutler * 10
+                antiass = 1
+            coutler = coutler + 1
+            if scan == "0" and antiass == 0:
+                print("Этого лвла у него нет")
+                return 0
+    
+    ok = ok / 10
+    data.close()
+    data = open("Base/" + pla, 'w')
+    data.write(name)
+    delet = 0
+    
+    for delete in lvlset:
+        if delet != ok:
+            data.write(delete)
+        delet = delet + 1
+
+clear("0")
+print("Загрузка...    19/22")
+
+def lvlcha(lvl,type,nyper):
+    
+    types = ["Author:","Verification:","Timings:","FPS:","balance:","PP:"]
+    data = open("Base/lvldatabase.altalvl", 'r')
+    lvls = data.readlines()
+    data.close()
+    data = open("Base/lvldatabase.altalvl", 'w')
+    ok = 0
+    cout = type
+    
+    for dated in lvls:
+        if ok == 1:
+            cout = int(cout) - 1
+        if cout != 100:
+            if dated.split("\n")[0] != lvl and cout != 0:
+                data.write(dated)
+            else: #находит лвл и..
+                data.write(dated)
+                ok = 1
+        else:
+            cout = 101
+        if cout == 0:
+            data.write(str(types[int(type)]) + str(nyper) + "\n") #..и записывет новые данные
+            ok = 0
+            cout = 100
+    data.close()
+
+clear("0")
+print("Загрузка.      20/22")
+
+def scanerpla(lvl,type):
+    
+    data = open("Base/lvldatabase.altalvl", 'r')
+    lvls = data.readlines()
+    data.close()
+    cout = 0
+
+    while lvls != "":
+        try:
+            if lvls[cout].split("\n")[0] == lvl:
+                dl = lvls[cout + int(type)].split(":")[-1]
+                return dl.rstrip('\n')
+        except IndexError:
+            return 0
+        cout = cout + 1
+
+clear("0")
+print("Загрузка..     21/22")
+
+def top(data,pp): #Делает топ
+    datapp = ([])
+    cont = 0
+    for d in data:
+        pp1 = float(pp[cont])
+        datapp.append((d,pp1))
+        cont = cont + 1
+    datapp = sorted(datapp, key=lambda datapp: datapp[-1], reverse=True)
+    cont = 1
+    for printtop in datapp:
+        if printtop[1] != 0:
+            print("Топ-" + str(cont))
+            print(" " + str(printtop[0]))
+            print(" pp:" + str(printtop[1]) + '\n')
+        cont = cont + 1
+
+clear("0")
+print("Загрузка...    22/22")
+
+def scanallvl(): #Ищет все лвла
+    
+    data = open("Base/lvldatabase.altalvl", 'r')
+    lvls = data.readlines()
+    lvls.append("")
+    data.close()
+    scan = "0"
+    cout = 0
+    alllvl = []
+    alllvl.append(lvls[0].rstrip("\n"))
+    while scan != "":
+        if (cout % 8) == 0:
+            alllvl.append(scan.rstrip("\n"))
+        cout = cout + 1
+        scan = lvls[cout]
+    return alllvl
 
 clear("0")
 
-print("Версия ALTA V3.4 by Prosto_Maksim")
+print("Версия ALTA V3.5 by Prosto_Maksim")
 print("Для помощи напишите help")
+
 while 1 == 1:
     
     try:
@@ -541,11 +760,13 @@ while 1 == 1:
             clear("0")
     except KeyboardInterrupt:
         sys.exit()
+    
     com = com.lower() #убирает высокий регистр
     main = com.split(' ')
     auto = len(com) #сетчик буквЬ)
     requirementscalving = com.split(' ') #делает массив по пробелам
     Length = len(requirementscalving) - 1 #Смотрить сколько в массиве элементов.
+    
     if Length != 0: #Смотрить если их не один, то
         requirements = str(requirementscalving[Length])
         Length = Length - 1
@@ -568,8 +789,12 @@ while 1 == 1:
             print("  info.pla - Список игроков(если написать ник, то будет работать как placal)")
             print("  victors - Ищет всех викторов нужного лвла")
             print("  add.vict - добавить игроку пройденный лвл")
+            print("  del.vict - Удалить пройденный лвл у игрока")
             print("  add.lvl - добавить лвл в датабазу")
             print("  info.lvl - поиск и инфа о лвле")
+            print("  chatim - изменить тайминги у лвла(автоматом пересчитает и для игроков)")
+            print("  rebal - повторно пересчитать ВСЮ ДАТАБАЗУ(если обновилась система пп)")
+            print("  top (-p = игроков) (-l = лвлов)")
             print("  load.db - Загружить датабазу")
             print("  save.db - Сохранить датабазу")
             print("  create.db - создать новую датабазу(Удалить если она была)")
@@ -678,9 +903,9 @@ while 1 == 1:
             try:
                 if auto == 8: #если только команда
                     com = input(">>")
-                    infolvl(com)
+                    infolvl(com, "1")
                 else: #если с ней что-то еще написано
-                    infolvl(requirements)
+                    infolvl(requirements, "1")
             except ValueError: #защита от идиота
                 print("Ты точно ввел нужное?")
             except KeyboardInterrupt:
@@ -693,10 +918,9 @@ while 1 == 1:
             try:
                 plar = input("Какой игрок?>")
                 lvl = input("Какой лвл?>")
-                pp = input("Сколько пп?>")
             except KeyboardInterrupt:
                 sys.exit()
-            addvict(plar,lvl,pp)
+            addvict(plar.lower(),lvl.lower())
         
         case "delete.db":
             antidelete = random.randint(1000,9999)
@@ -704,7 +928,7 @@ while 1 == 1:
                 com = input("Вы уверенны??(напишите в ответ>" + str(antidelete) + ") >" )
             except KeyboardInterrupt:
                 sys.exit()
-            if int(com) == antidelete:
+            if com == str(antidelete):
                 shutil.rmtree("Base")
                 print("Датабаза удаленна")
             else:
@@ -738,6 +962,7 @@ while 1 == 1:
         
         case "load.db":
             loaddb()
+        
         case "save.db":
             savedb()
         
@@ -752,6 +977,32 @@ while 1 == 1:
                 print("Ты точно ввел нужное?")
             except KeyboardInterrupt:
                 sys.exit()
+        
+        case "del.vict":
+            com = input("У кого?>")
+            com2 = input("Какой лвл?>")
+            deleteplalvl(com.lower(),com2.lower())
+        
+        case "chatim":
+            com = input("Какой лвл?>").lower()
+            com3 = input("Какой фпс?(0 если обычный)")
+            if com3 == "0" or com3 == "": #Если ничего то обычный фпс
+                com3 = TPS
+            com2 = input("Какие тайминги?>")
+            lvlcha(com,"2",com2)
+            lvlcha(com,"3",com3)
+            scanpplvl(com)
+        
+        case "rebal":
+            com = scanallvl()
+            for lvl in com:
+                if lvl != "0":
+                    scanpplvl(lvl)
+        
+        case "top":
+        
+            plalvlcomm(requirements)
+        
         case "dev":
             print("Главный - Prosto_Maksim - https://youtube.com/@Prosto_Maksim\n")
             print("Спасибо - SpaceKZ за идею и за (balcal) - https://www.youtube.com/@spaceKZ1\n")
