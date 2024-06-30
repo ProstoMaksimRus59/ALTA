@@ -3,7 +3,7 @@ import sys, re, os, shutil, random, zipfile, statistics, math
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA V3.5 by Prosto_Maksim")
+        print("Версия ALTA V3.6 by Prosto_Maksim")
 print("Загрузка.    1/22")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
@@ -25,7 +25,7 @@ def Placal(folder,data): #Писал пиздец давно, так-что по
     pp = 0
     Scan = 1
     
-    print("Player:" + file.readline().rstrip('\n')) #Показывает какой игрок
+    print("Игрок:" + file.readline().rstrip('\n')) #Показывает какой игрок
     
     while Scan == 1:
         pp1 = re.findall(r'\d+', file.readline().rstrip(' ').rstrip('\n').rstrip(':'))
@@ -95,7 +95,6 @@ def lvlcal(fps,Timings,seting):
     for Timing in Timings.split(";"): #Делаем масив по ; и сразу заходим в цикл for
         try:
             Points = Points + ForReferencePoints / int(Timing) #считает балы за тайминг
-        
         except ZeroDivisionError:
             print("Лвл не проходим!")
             return 0
@@ -116,7 +115,7 @@ def lvlcal(fps,Timings,seting):
     result = Points / Compression #Выравнивем по эталону
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
     if seting != "2":
-        print("\nВерсия ALTA V3.5 by Prosto_Maksim")
+        print("\nВерсия ALTA V3.6 by Prosto_Maksim")
         print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
@@ -293,7 +292,11 @@ def addlvl():
         sys.exit()
     
     scan = 0
-    data = open("Base/lvldatabase.altalvl", 'r')
+    try:
+        data = open("Base/lvldatabase.altalvl", 'r')
+    except FileNotFoundError:
+        print("Датабаза не найдена")
+        return 0
     while scan == 0:
         lvlscan = data.readline().rstrip('\n')
         if lvlscan.lower() == com1.lower():
@@ -489,7 +492,11 @@ def savedb():
     except KeyboardInterrupt:
         sys.exit()
     zip = zipfile.ZipFile(name +".zip", "w") #Создает архив
-    zip.write("Base") #Создает папку в нем
+    try:
+        zip.write("Base") #Создает папку в нем
+    except FileNotFoundError:
+        print("Датабаза не найдена")
+        return 0
     files = os.listdir("Base/") #Смотрит что у вас в базе
     
     for scan in files: #Смотрит что у вас в базе
@@ -505,9 +512,12 @@ print("Загрузка.     14/22")
 
 def infopla(pla):
     if pla == "0":
-        
+        try:
+            files = os.listdir("Base/") #ищет в базе игроков
+        except FileNotFoundError:
+            print("Датабаза не найдена")
+            return 0
         print("Все игроки в базе")
-        files = os.listdir("Base/") #ищет в базе игроков
         files = filter(lambda x: x.endswith('.altapl'), files)
         
         for plaer in files: #Кусок от placal
@@ -536,17 +546,17 @@ def infopla(pla):
         Placal("Base/" + pla, "1")
 def plalvlcomm(requirements): #Для безопастности вынес это как функцию
             if requirements == "-l": #если лвл
-                print("Топ лвлов>")
                 alllvl = scanallvl() #Получает все лвла
+                print("Топ лвлов>")
                 pplvl = []
                 for lvl in alllvl:
                     pplvl.append(infolvl(lvl,"0")) #Получает пп
                 top(alllvl,pplvl) #Делает топ
             
             if requirements == "-p":
-                print("Топ игроков>")
                 Ramdonmane = os.listdir("Base/") #ищет в базе игроков
                 Ramdonmane = filter(lambda x: x.endswith('.altapl'), Ramdonmane)
+                print("Топ игроков>")
                 pplvl = []
                 alllvl = []
                 for plaer in Ramdonmane:
@@ -595,9 +605,17 @@ def balanceKZ(fps,sequence,lvlcalmode): #Не мое, так-что писать
         if k == statistics.mode(list):
             score=score+1
         elif k < statistics.mode(list):
-            score=score+1-(((2*math.pi)**(statistics.mode(list)/int(k)))/fps)
+            try: #Баг фикс от меня '.'
+                score=score+1-(((2*math.pi)**(statistics.mode(list)/int(k)))/fps)
+            except OverflowError: #.
+                score = 0 #.
+                break #.
         elif k > statistics.mode(list):
-            score=score+1-(((2*math.pi)**(int(k)/statistics.mode(list)))/fps)
+            try: #.
+                score=score+1-(((2*math.pi)**(int(k)/statistics.mode(list)))/fps)
+            except OverflowError: #.
+                score = 0 #.
+                break #.
     points = score/len(list)*10
     if points < 0:
         points=0
@@ -749,7 +767,7 @@ def scanallvl(): #Ищет все лвла
 
 clear("0")
 
-print("Версия ALTA V3.5 by Prosto_Maksim")
+print("Версия ALTA V3.6 by Prosto_Maksim")
 print("Для помощи напишите help")
 
 while 1 == 1:
@@ -778,34 +796,143 @@ while 1 == 1:
     match main[0]:
         
         case "help":
-            print(" Основные команды:")
-            print("  fps - меняет фпс расчета pp")
-            print("  fps.set - фпс который будет при запуске")
-            print("  Placal - измерение сумарного pp игрока по файлу")
-            print("  lvlcal - измерение пп лвла")
-            print("  balcal - измерение баланса лвла(by SpaceKZ)")
-            print(" Для датабазы:")
-            print("  add.pla - добавить игрока в датабазу")
-            print("  info.pla - Список игроков(если написать ник, то будет работать как placal)")
-            print("  victors - Ищет всех викторов нужного лвла")
-            print("  add.vict - добавить игроку пройденный лвл")
-            print("  del.vict - Удалить пройденный лвл у игрока")
-            print("  add.lvl - добавить лвл в датабазу")
-            print("  info.lvl - поиск и инфа о лвле")
-            print("  chatim - изменить тайминги у лвла(автоматом пересчитает и для игроков)")
-            print("  rebal - повторно пересчитать ВСЮ ДАТАБАЗУ(если обновилась система пп)")
-            print("  top (-p = игроков) (-l = лвлов)")
-            print("  load.db - Загружить датабазу")
-            print("  save.db - Сохранить датабазу")
-            print("  create.db - создать новую датабазу(Удалить если она была)")
-            print("  delete.db - Просто удалить установленную датабазу")
-            print(" Доп:")
-            print("  conv - конвертер c старого формата 12354 в новый формат 1;2;3;5;4 таймингов")
-            print("  clear - очистить комадную строку")
-            print("  clear.auto - оставляет в командной строке только последнюю команду")
-            print("  lvlcal.bal - встраивает в измерения lvlcal и balcal")
-            print("  exit - выйди из проги(можно юзать Ctrl + C )")
-            print("  dev - список всех кто принимал участие и так-далее")
+            match requirements:
+                case "help":
+                    print(" Для посмотра всех команд водите help 'число' \n1 - Основные команды \n2 - Команды для Датабазы \n3 - Доп")
+                    print(" Для помощи о конкретной комадны ведите так help 'нужная комадна'")
+                case "1":
+                    print(" Основные команды:")
+                    print("  fps - меняет фпс расчета pp")
+                    print("  fps.set - фпс который будет при запуске")
+                    print("  Placal - измерение сумарного pp игрока по файлу")
+                    print("  lvlcal - измерение пп лвла")
+                    print("  balcal - измерение баланса лвла(by SpaceKZ)")
+                case "2":
+                    print(" Для датабазы:")
+                    print("  add.pla - добавить игрока в датабазу")
+                    print("  info.pla - Список игроков(если написать ник, то будет работать как placal)")
+                    print("  victors - Ищет всех викторов нужного лвла")
+                    print("  add.vict - добавить игроку пройденный лвл")
+                    print("  del.vict - Удалить пройденный лвл у игрока")
+                    print("  add.lvl - добавить лвл в датабазу")
+                    print("  info.lvl - поиск и инфа о лвле")
+                    print("  chatim - изменить тайминги у лвла(автоматом пересчитает и для игроков)")
+                    print("  rebal - повторно пересчитать ВСЮ ДАТАБАЗУ(если обновилась система пп)")
+                    print("  top (-p = игроков) (-l = лвлов)")
+                    print("  load.db - Загружить датабазу")
+                    print("  save.db - Сохранить датабазу")
+                    print("  create.db - создать новую датабазу(Удалить если она была)")
+                    print("  delete.db - Просто удалить установленную датабазу")
+                case "3":
+                    print(" Доп:")
+                    print("  conv - конвертер c старого формата 12354 в новый формат 1;2;3;5;4 таймингов")
+                    print("  clear - очистить комадную строку")
+                    print("  clear.auto - оставляет в командной строке только последнюю команду")
+                    print("  lvlcal.bal - встраивает в измерения lvlcal и balcal")
+                    print("  exit - выйди из проги(можно юзать Ctrl + C )")
+                    print("  dev - список всех кто принимал участие и так-далее")
+                case "fps":
+                    print("Команда FPS - для изменения фпса расчета пп")
+                    print("  Еще при пропуска фпса в chatim будет фпс который вы указали в fps")
+                    print("  Если написать фпс '0' то фпс будет сброшен по fps.set")
+                case "fps.set":
+                    print("Команда fps.set - стоковый фпс который будет выбиратся при запуске")
+                    print("  Если написать фпс '0' то будет сохранятся 240")
+                case "placal":
+                    print("Комадна placal - считает сумарный пп у игрока по файлу")
+                    print("  Для работы надо перекинуть в консоль файл и нажать ENTER")
+                    print("  Файл должен иметь правильный формат -< ")
+                    print("  Ник игрока")
+                    print("  ЛВЛ(его хардест):пп(сколько выдало lvlcal)")
+                    print("  ЛВЛ(его предхардест):пп(сколько выдало lvlcal)")
+                    print("  и так далее")
+                    print("  0 - в конце  >")
+                    print("  % это солько всего дали от пп")
+                    print("  The cube challenge 1:500пп 85% == 500пп*0.85%=425пп(425 сколько дали ему)")
+                case "lvlcal":
+                  print("Комадна lvlcal для измерения сложности лвла по пп")
+                  print("   Для измерения нужно иметь гд с FrameStep и фпс байпасс(физикс байпасс в 2.2)")
+                  print("   Ставим фпс(в gd и в alta(комадна fps)) на котором будуте мерить(тем больше фпс тем точнее(но дольше будет замер))")
+                  print("   Дальше начинаем замерать сколько кадждый тайминг имеет кадров для пролета и записывать его через ;")
+                  print("   После замеров у вас будет примерно вот-это 4;7;3;6;2;10;1;2")
+                  print("   После жмем Enter и получаем результат")
+                case "balcal":
+                    print("Комадна balcal для измерения баланса лвла")
+                    print("  Измерается так-же как и lvlcal")
+                    print("-  -  -  -  -  -")
+                    print(" Для измерения нужно иметь гд с FrameStep и фпс байпасс(физикс байпасс в 2.2)")
+                    print(" Ставим фпс(в gd и в alta(комадна fps)) на котором будуте мерить")
+                    print(" Дальше начинаем замерать сколько кадждый тайминг имеет кадров для пролета и записывать его через ;")
+                    print(" После замеров у вас будет примерно вот-это 4;7;3;6;2;10;1;2")
+                    print(" После жмем Enter и получаем результат")
+                    print("-  -  -  -  -  -")
+                case "add.pla":
+                    print("Команда add.pla добавляет в датабазу игрока.\nПосле этого с ним можно будет работать")
+                case "info.pla":
+                    print("Комадна info.pla, при пустом вводе показывает всех кто датабазе")
+                    print(" Если дописать ник, то будет работать как примерно placal")
+                case "victors":
+                    print("Комадна victors 'лвл' - показывает всех викторов лвла в базе, без порядка")
+                case "add.vict":
+                    print("Комадна add.vict - добавлает игроку пройденный лвл")
+                    print("  Для этого водим")
+                    print("  1 - Ник виктора в базе")
+                    print("  2 - Пройденный лвл (он должен быть в базе)")
+                case "del.vict":
+                    print("Комадна del.vict - удалает игроку пройденный лвл")
+                    print("  Для этого водим")
+                    print("  1 - Ник виктора в базе")
+                    print("  2 - Пройденный лвл")
+                case "add.lvl":
+                    print("Команда add.lvl - добавляет лвл в базу")
+                    print("  Для этого водим")
+                    print("  1 - Название лвла")
+                    print("  2 - Автора(ы) или хоста(ов) лвла")
+                    print("  3 - Ник верификатора лвла")
+                    print("  4 - Тайминги который получились после замера лвла, тоесь например'2;3;6;3;7;4;3;7")
+                    print("  5 - Фпс на которым вы замеряли")
+                case "info.lvl":
+                    print("Команда info.lvl 'Искомый лвл' - показывает основные данные об лвле")
+                case "chatim":
+                    print("Команда chatim - дает изменить тайминги у лвла в базе")
+                    print("И автоматом меняет у всех викторов пп за него")
+                    print(" Для этого водим")
+                    print("  1 - Название лвла")
+                    print("  2 - фпс(если вести 0 то будет выбиратся который поставленный в fps или fps.set)")
+                    print("  3 - Тайминги")
+                case "rebal":
+                    print("Команда rebal - служить для быстрого пересчета при изменения пп системы")
+                    print("  Пересчитывает все лвл и перечисляет пп игрокам")
+                case "top":
+                    print("Команда top -l(лвла), -p(игроки) - Сортирует игроков или лвла по пп и делает топ")
+                case "load.db":
+                    print("Команда load.db - дает загружить датабазу из файла(zip)")
+                    print("  Для Загрузки он удалить старую базу(для защиты он попросить вести капчу)")
+                    print("  После этого он попросить кинуть в окно программы файл датабазы(zip)")
+                    print("  И он загружить ее")
+                case "save.db":
+                    print("Комадна save.db - дает сохранить базу, чтоб потом можно было загружить через load.db")
+                    print(" Для сохранения надо")
+                    print("  1 - Назвать датабазу")
+                    print("  2 - Назвать датабазу")
+                    print("  3 - Путь куда ее сохранить(можно кинуть в окно нужную папку)")
+                case "create.db":
+                    print("Команда create.db - создает датабазу(если ее нет) или очисить(если она то этого была)")
+                    print("Если она была - то она попросить вести капчу")
+                case "delete.db":
+                    print("Комадна delete.db - удалить датабазу(попросить вести капчу)")
+                case "conv":
+                    print("conv - Если у вас остались тайминги от старых версий ALTA, где тайминги были максимум до 9 кадров")
+                case "clear":
+                    print("Чистить консоль")
+                case "clear.auto":
+                    print("Чистить после каждой команды(это настройка сохраняется даже после перезапуска ALTA)")
+                case "lvlcal.bal":
+                    print("встраивает в измерения lvlcal и balcal(это настройка сохраняется даже после перезапуска ALTA)")
+                case "exit":
+                    print("выйди из проги(можно юзать Ctrl + C )")
+                case "dev":
+                    print("О разработчиках ALTA и помощников")
         case "clear":
             clear("1")
         
@@ -958,7 +1085,7 @@ while 1 == 1:
             except ValueError: #защита от идиота
                 print("Ты точно ввел нужное?")
             except KeyboardInterrupt:
-                sys.exit()           
+                sys.exit()
         
         case "load.db":
             loaddb()
@@ -989,20 +1116,31 @@ while 1 == 1:
             if com3 == "0" or com3 == "": #Если ничего то обычный фпс
                 com3 = TPS
             com2 = input("Какие тайминги?>")
-            lvlcha(com,"2",com2)
-            lvlcha(com,"3",com3)
-            scanpplvl(com)
+            try:
+                lvlcha(com,"2",com2)
+                lvlcha(com,"3",com3)
+                scanpplvl(com)
+            except FileNotFoundError:
+                print("Датабаза не найдена")
         
         case "rebal":
-            com = scanallvl()
+            try:
+                com = scanallvl()
+            except FileNotFoundError:
+                    print("Датабаза не найдена")            
+            
             for lvl in com:
                 if lvl != "0":
-                    scanpplvl(lvl)
+                    try:
+                        scanpplvl(lvl)
+                    except FileNotFoundError:
+                        print
         
         case "top":
-        
-            plalvlcomm(requirements)
-        
+            try:
+                plalvlcomm(requirements)
+            except FileNotFoundError:
+                print("Датабаза не найдена")
         case "dev":
             print("Главный - Prosto_Maksim - https://youtube.com/@Prosto_Maksim\n")
             print("Спасибо - SpaceKZ за идею и за (balcal) - https://www.youtube.com/@spaceKZ1\n")
