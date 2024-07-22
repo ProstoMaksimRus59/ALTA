@@ -3,7 +3,7 @@ import sys, re, os, shutil, random, zipfile, statistics, math
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA V3.6 by Prosto_Maksim")
+        print("Версия ALTA v3.7 by Prosto_Maksim")
 print("Загрузка.    1/22")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
@@ -115,7 +115,7 @@ def lvlcal(fps,Timings,seting):
     result = Points / Compression #Выравнивем по эталону
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
     if seting != "2":
-        print("\nВерсия ALTA V3.6 by Prosto_Maksim")
+        print("\nВерсия ALTA v3.7 by Prosto_Maksim")
         print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
@@ -278,7 +278,7 @@ def addlvl():
         com1 = input(">")
         print("Автор(ы) лвла")
         com2 = input(">")
-        print("Верификатор лвла")
+        print("Верификатор лвла(если нет, то - ?)")
         com3 = input(">")
         print("Тайминги лвла")
         com4 = input(">")
@@ -547,12 +547,25 @@ def infopla(pla):
 def plalvlcomm(requirements): #Для безопастности вынес это как функцию
             if requirements == "-l": #если лвл
                 alllvl = scanallvl() #Получает все лвла
-                print("Топ лвлов>")
+                print("Топ всех лвлов>")
                 pplvl = []
                 for lvl in alllvl:
                     pplvl.append(infolvl(lvl,"0")) #Получает пп
                 top(alllvl,pplvl) #Делает топ
             
+            if requirements == "-ver": #если лвл
+                alllvl = scanallvl() #Получает все лвла
+                print("Топ верифнутых лвлов>")
+                pplvl = []
+                for lvl in alllvl:
+                    if scanerpla(lvl, '2') != "?":
+                        pplvl.append(infolvl(lvl,"0")) #Получает пп
+                    else:
+                        alllvl.remove(lvl)
+                try:
+                    top(alllvl,pplvl) #Делает топ
+                except IndexError:
+                    print("А их нет :/")
             if requirements == "-p":
                 Ramdonmane = os.listdir("Base/") #ищет в базе игроков
                 Ramdonmane = filter(lambda x: x.endswith('.altapl'), Ramdonmane)
@@ -767,7 +780,7 @@ def scanallvl(): #Ищет все лвла
 
 clear("0")
 
-print("Версия ALTA V3.6 by Prosto_Maksim")
+print("Версия ALTA v3.7 by Prosto_Maksim")
 print("Для помощи напишите help")
 
 while 1 == 1:
@@ -817,12 +830,14 @@ while 1 == 1:
                     print("  add.lvl - добавить лвл в датабазу")
                     print("  info.lvl - поиск и инфа о лвле")
                     print("  chatim - изменить тайминги у лвла(автоматом пересчитает и для игроков)")
+                    print("  chaver - изменить верификатора(добавить/удалить) у лвла")
                     print("  rebal - повторно пересчитать ВСЮ ДАТАБАЗУ(если обновилась система пп)")
-                    print("  top (-p = игроков) (-l = лвлов)")
+                    print("  top (-p = игроков) (-l = всех лвлов) (-ver топ верифнутых лвлов)")
                     print("  load.db - Загружить датабазу")
                     print("  save.db - Сохранить датабазу")
                     print("  create.db - создать новую датабазу(Удалить если она была)")
                     print("  delete.db - Просто удалить установленную датабазу")
+                    print("!Внимание виктор и верифер не как сами не свазываются! если кто-то верифнул лвл, добавьте отдельно как верифер и как виктор!")
                 case "3":
                     print(" Доп:")
                     print("  conv - конвертер c старого формата 12354 в новый формат 1;2;3;5;4 таймингов")
@@ -900,11 +915,16 @@ while 1 == 1:
                     print("  1 - Название лвла")
                     print("  2 - фпс(если вести 0 то будет выбиратся который поставленный в fps или fps.set)")
                     print("  3 - Тайминги")
+                case "chaver":
+                    print("Команда chatim - дает изменить верифера у лвла в базе")
+                    print(" Для этого водим")
+                    print("  1 - Название лвла")
+                    print("  2 - Верифера(если убрать - '?')")
                 case "rebal":
                     print("Команда rebal - служить для быстрого пересчета при изменения пп системы")
                     print("  Пересчитывает все лвл и перечисляет пп игрокам")
                 case "top":
-                    print("Команда top -l(лвла), -p(игроки) - Сортирует игроков или лвла по пп и делает топ")
+                    print("Команда top -l(все лвла),-ver(все верифнутые лвла), -p(игроки) - Сортирует игроков или лвла по пп и делает топ")
                 case "load.db":
                     print("Команда load.db - дает загружить датабазу из файла(zip)")
                     print("  Для Загрузки он удалить старую базу(для защиты он попросить вести капчу)")
@@ -1123,6 +1143,13 @@ while 1 == 1:
             except FileNotFoundError:
                 print("Датабаза не найдена")
         
+        case "chaver":
+            com = input("Какой лвл?>").lower()
+            com3 = input("Кто верифер?(знак ? чтоб убрать)>")
+            try:
+                lvlcha(com, "1", com3)
+            except FileNotFoundError:
+             print("Датабаза не найдена")   
         case "rebal":
             try:
                 com = scanallvl()
