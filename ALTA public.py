@@ -551,13 +551,15 @@ def plalvlcomm(requirements): #Для безопастности вынес эт
                 pplvl = []
                 for lvl in alllvl:
                     pplvl.append(infolvl(lvl,"0")) #Получает пп
+                print(alllvl,pplvl)
                 top(alllvl,pplvl) #Делает топ
             
             if requirements == "-ver": #если лвл
                 alllvl = scanallvl() #Получает все лвла
+                safelllvl = scanallvl()
                 print("Топ верифнутых лвлов>")
                 pplvl = []
-                for lvl in alllvl:
+                for lvl in safelllvl:
                     if scanerpla(lvl, '2') != "?":
                         pplvl.append(infolvl(lvl,"0")) #Получает пп
                     else:
