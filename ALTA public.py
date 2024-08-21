@@ -3,7 +3,7 @@ import sys, re, os, shutil, random, zipfile, statistics, math
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA v3.7 by Prosto_Maksim")
+        print("Версия ALTA v3.7_1 by Prosto_Maksim")
 print("Загрузка.    1/22")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
@@ -115,7 +115,7 @@ def lvlcal(fps,Timings,seting):
     result = Points / Compression #Выравнивем по эталону
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
     if seting != "2":
-        print("\nВерсия ALTA v3.7 by Prosto_Maksim")
+        print("\nВерсия ALTA v3.7_1 by Prosto_Maksim")
         print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
@@ -355,7 +355,7 @@ def infolvl(lvl,setmode):
 clear("0")
 print("Загрузка...   9/22")
 
-def addvict(Player,lvld):
+def addvict(Player,lvld): #Дает добавить лвл игроку
     try:
         pp = float(infolvl(lvld, "0"))
     except ValueError:
@@ -551,12 +551,11 @@ def plalvlcomm(requirements): #Для безопастности вынес эт
                 pplvl = []
                 for lvl in alllvl:
                     pplvl.append(infolvl(lvl,"0")) #Получает пп
-                print(alllvl,pplvl)
                 top(alllvl,pplvl) #Делает топ
             
             if requirements == "-ver": #если лвл
                 alllvl = scanallvl() #Получает все лвла
-                safelllvl = scanallvl()
+                safelllvl = alllvl
                 print("Топ верифнутых лвлов>")
                 pplvl = []
                 for lvl in safelllvl:
@@ -656,7 +655,7 @@ def scanpplvl(lvl):
 clear("0")
 print("Загрузка..     18/22")
 
-def deleteplalvl(pla, lvl):
+def deleteplalvl(pla, lvl): #Дает удалить пройденный лвл у игрока
     pla = pla + ".altapl"
     
     try:
@@ -695,7 +694,7 @@ def deleteplalvl(pla, lvl):
 clear("0")
 print("Загрузка...    19/22")
 
-def lvlcha(lvl,type,nyper):
+def lvlcha(lvl,type,nyper): #дает менять данные в базе о лвле
     
     types = ["Author:","Verification:","Timings:","FPS:","balance:","PP:"]
     data = open("Base/lvldatabase.altalvl", 'r')
@@ -782,7 +781,7 @@ def scanallvl(): #Ищет все лвла
 
 clear("0")
 
-print("Версия ALTA v3.7 by Prosto_Maksim")
+print("Версия ALTA v3.7_1 by Prosto_Maksim")
 print("Для помощи напишите help")
 
 while 1 == 1:
