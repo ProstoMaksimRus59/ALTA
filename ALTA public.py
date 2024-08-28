@@ -574,11 +574,9 @@ def plalvlcomm(requirements): #Для безопастности вынес эт
                 pplvl = []
                 alllvl = []
                 for plaer in Ramdonmane:
-                    print(plaer)
                     wfr = plaer.split(".altapl")
                     alllvl.append(wfr[0])
                     pplvl.append(round(tophelper(plaer)[0])) #Получает пп
-                print(alllvl,pplvl)
                 top(alllvl,pplvl)#Делает топ
 
 clear("0")
