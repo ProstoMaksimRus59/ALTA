@@ -3,7 +3,7 @@ import sys, re, os, shutil, random, zipfile, statistics, math
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA v3.7_2 by Prosto_Maksim")
+        print("Версия ALTA v3.7_3 by Prosto_Maksim")
 print("Загрузка.    1/22")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
@@ -115,7 +115,7 @@ def lvlcal(fps,Timings,seting):
     result = Points / Compression #Выравнивем по эталону
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
     if seting != "2":
-        print("\nВерсия ALTA v3.7_2 by Prosto_Maksim")
+        print("\nВерсия ALTA v3.7_3 by Prosto_Maksim")
         print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
@@ -574,9 +574,11 @@ def plalvlcomm(requirements): #Для безопастности вынес эт
                 pplvl = []
                 alllvl = []
                 for plaer in Ramdonmane:
-                    wfr = plaer.rstrip(".altapl")
-                    alllvl.append(wfr)
+                    print(plaer)
+                    wfr = plaer.split(".altapl")
+                    alllvl.append(wfr[0])
                     pplvl.append(round(tophelper(plaer)[0])) #Получает пп
+                print(alllvl,pplvl)
                 top(alllvl,pplvl)#Делает топ
 
 clear("0")
@@ -781,7 +783,7 @@ def scanallvl(): #Ищет все лвла
 
 clear("0")
 
-print("Версия ALTA v3.7_2 by Prosto_Maksim")
+print("Версия ALTA v3.7_3 by Prosto_Maksim")
 print("Для помощи напишите help")
 
 while 1 == 1:
