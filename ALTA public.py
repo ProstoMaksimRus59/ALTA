@@ -3,7 +3,7 @@ import sys, re, os, shutil, random, zipfile, statistics, math
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA v3.7_3 by Prosto_Maksim")
+        print("Версия ALTA v4.0 by Prosto_Maksim")
 print("Загрузка.    1/22")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
@@ -69,14 +69,14 @@ clear("0")
 print("Загрузка..   2/22")
 
 def lvlcal(fps,Timings,seting):
-    ReferenceFps = 240 #главный фпс
-    ForReferencePoints = 10000 #балы за 240
-    Compression = 225 #для выравнивания
-    Points = 0 #балы
+    Referencepoint = 40000
     Сounter = 0 #Сетчик таймингов
     HardestC = 99999999 #Сетчик самого сложного тайминга
     Mior = 0 #ср тайминг
-    FreeC = 0 #Сетчик самого легкого тайминга
+    FreeC = 0
+    point = 0
+    Compression = 216
+    Mior = 0
     if Timings == "0": #если ничего нет, то повторно попросить вести тайминги.
         print("\nПометка - Невидимые тайминги = сам тайминг / 2(В округление больше сторону)")
         print("Пометка - Любые клики которым просто достаточно нажать заранее - не должны учитываться никак")
@@ -94,14 +94,14 @@ def lvlcal(fps,Timings,seting):
     Timings = str(Timings)
     for Timing in Timings.split(";"): #Делаем масив по ; и сразу заходим в цикл for
         try:
-            Points = Points + ForReferencePoints / int(Timing) #считает балы за тайминг
+            mc = 1000 / (int(fps) / int(Timing)) #считает время тайминга
         except ZeroDivisionError:
             print("Лвл не проходим!")
             return 0
         except ValueError:
             print("Это точно тайминги?")
             return 0
-        
+        point = point + (Referencepoint / mc) #считаем баллы за время тайминга
         if int(Timing) < int(HardestC): #Если тайминг сложнее старого, то он записывается
             HardestC = Timing
         
@@ -110,12 +110,10 @@ def lvlcal(fps,Timings,seting):
         
         Сounter = Сounter + 1 #сетчик таймингов
         Mior = Mior + int(Timing)
-    
-    Points = Points / (ReferenceFps / int(fps)) #Выравнивает балы по фпс
-    result = Points / Compression #Выравнивем по эталону
+    result = point / Compression
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
     if seting != "2":
-        print("\nВерсия ALTA v3.7_3 by Prosto_Maksim")
+        print("\nВерсия ALTA v4.0 by Prosto_Maksim")
         print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
@@ -781,7 +779,7 @@ def scanallvl(): #Ищет все лвла
 
 clear("0")
 
-print("Версия ALTA v3.7_3 by Prosto_Maksim")
+print("Версия ALTA v4.0 by Prosto_Maksim")
 print("Для помощи напишите help")
 
 while 1 == 1:
