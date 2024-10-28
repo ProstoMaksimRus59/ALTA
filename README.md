@@ -12,7 +12,7 @@ C Osu!(https://github.com/ppy) подобным методом
 
 За идею спасибо SpaceKZ (и за balcal)(https://www.youtube.com/@spaceKZ1)
 
-Гайд - https://youtu.be/mJTOHU9eb0w?si=chv7xQWFy7MvxHmB (Частично устарел)
+Гайд - https://youtu.be/mJTOHU9eb0w?si=chv7xQWFy7MvxHmB (устарел)
 
 .
 
