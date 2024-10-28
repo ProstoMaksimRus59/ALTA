@@ -1,5 +1,6 @@
 
-![logoalta](https://github.com/ProstoMaksimRus59/ALTA/assets/102693495/7f4e2a94-aa17-4dad-825f-74e74c47a355)
+![logoalta4](https://github.com/user-attachments/assets/e5063447-3d7c-411d-bf6d-fb01cfb8da09)
+
 
 
 
