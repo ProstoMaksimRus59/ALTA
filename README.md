@@ -77,6 +77,6 @@ C Osu!(https://github.com/ppy) подобным методом
 >
 > -Точность(может начать криво работать код после сборки)
 
-p.s для работы(если ошибка при запуск) ALTA скачайте python 3.11
+p.s для работы(если ошибка при запуске) ALTA -- скачайте python 3.11
 
 https://apps.microsoft.com/detail/9nrwmjp3717k?hl=ru-RU&gl=RU
