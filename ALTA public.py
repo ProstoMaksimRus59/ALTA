@@ -3,7 +3,7 @@ import sys, re, os, shutil, random, zipfile, statistics, math
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA v4.1 by Prosto_Maksim")
+        print("Версия ALTA v4.1_2 by Prosto_Maksim")
 print("Загрузка.    1/23")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
@@ -113,7 +113,7 @@ def lvlcal(fps,Timings,seting):
     result = point / Compression
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
     if seting != "2":
-        print("\nВерсия ALTA v4.1 by Prosto_Maksim")
+        print("\nВерсия ALTA v4.1_2 by Prosto_Maksim")
         print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
@@ -782,18 +782,53 @@ print("Загрузка...    23/23")
 
 def freme(fps,Timings):
     Сounter = 0
+    Counter2fp = 0
+    Counter3fp = 0
     Fremere = [0,0,0]
-    Timings = str(Timings)
+
+    Timings = Timings.split('-')
+    if len(Timings) == 1:
+        Timings = str(Timings[0])
+
+    elif Timings[1] == "l":  # если -l
+        
+        Timings = str(Timings[0]) #чистить название лвл от -l 
+        Lvl = Timings.rstrip(Timings[-1])
+        
+        Timings = scanerpla(Lvl,"3") #Ищет тайминги в датабазе
+        if Timings == 0:
+            print("Ты точно ввел нужное?")
+            return 0    
+    elif Timings:
+        print("Ты точно ввел нужное?")
+        return 0
     for T in Timings.split(";"):
         Сounter = Сounter + 1
         T = int(T)
-        if T == 1:
+        
+        if T == 1: #первый фп(например 240фп)
             Fremere[0] = Fremere[0] + 1
-        if T == 2 or T == 3:
-            Fremere[1] = Fremere[1] + 1
-        if T >= 4 and T <= 5:
-            Fremere[2] = Fremere[2] + 1
-    print("\nВерсия ALTA v4.1 by Prosto_Maksim")
+        
+        elif T == 2 or T == 3: #Второй фп(например 120фп)
+            if T == 2:
+                Fremere[1] = Fremere[1] + 1
+            elif T == 3:
+                if Counter2fp <= 1:
+                    Fremere[1] = Fremere[1] + 1
+                Counter2fp = Counter2fp + 1
+                if Counter2fp >= 13:
+                    Counter2fp = 0
+        
+        elif T >= 4 and T <= 5: #Третий фп(например 60фп)
+            if T == 4:
+                Fremere[2] = Fremere[2] + 1
+            elif T == 5:
+                if Counter3fp <= 2:
+                    Fremere[2] = Fremere[2] + 1
+                Counter3fp = Counter3fp + 1
+                if Counter3fp >= 4:
+                    Counter3fp = 0                
+    print("\nВерсия ALTA v4.1_2 by Prosto_Maksim")
     print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
     print("Фпс измерения:" + str(fps) + "\n")
     print(str(fps) +" fps фреймы:"+ str(Fremere[0]))
@@ -801,7 +836,7 @@ def freme(fps,Timings):
     print(str(int(fps)/4) +" fps фреймы:"+ str(Fremere[2])+" +-")
 clear("0")
 
-print("Версия ALTA v4.1 by Prosto_Maksim")
+print("Версия ALTA v4.1_2 by Prosto_Maksim")
 print("Для помощи напишите help")
 
 while 1 == 1:
@@ -841,7 +876,6 @@ while 1 == 1:
                     print("  Placal - измерение сумарного pp игрока по файлу")
                     print("  lvlcal - измерение пп лвла")
                     print("  balcal - измерение баланса лвла(by SpaceKZ)")
-                    print("  frep - Измерение фрейм перфект")
                 case "2":
                     print(" Для датабазы:")
                     print("  add.pla - добавить игрока в датабазу")
@@ -868,6 +902,7 @@ while 1 == 1:
                     print("  lvlcal.bal - встраивает в измерения lvlcal и balcal")
                     print("  exit - выйди из проги(можно юзать Ctrl + C )")
                     print("  dev - список всех кто принимал участие и так-далее")
+                    print("  frep - примерное измерение фрейм перфектов")
                 case "fps":
                     print("Команда FPS - для изменения фпса расчета пп")
                     print("  Еще при пропуска фпса в chatim будет фпс который вы указали в fps")
@@ -912,7 +947,10 @@ while 1 == 1:
                     print(" Дальше начинаем замерать сколько каждый тайминг имеет кадров для пролета и записывать его через ;")
                     print(" После замеров у вас будет примерно вот-это 4;7;3;6;2;10;1;2")
                     print(" После жмем Enter и получаем результат")
-                    print("-  -  -  -  -  -")                    
+                    print("-  -  -  -  -  -")
+                    print("А если у вас лвл уже есть в датабазе то")
+                    print("/frep (уровень) -l")
+                    print("-l = lvl, тоесь поиск в датабазе по названию")                    
                 case "add.pla":
                     print("Команда add.pla добавляет в датабазу игрока.\nПосле этого с ним можно будет работать")
                 case "info.pla":
