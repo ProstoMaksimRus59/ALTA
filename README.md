@@ -1,5 +1,6 @@
 
-![logoalta4](https://github.com/user-attachments/assets/e5063447-3d7c-411d-bf6d-fb01cfb8da09)
+<img width="128" height="128" alt="logoalta5" src="https://github.com/user-attachments/assets/a931e556-a2c5-41c5-9fa6-ad13aa7d6dd2" />
+
 
 
 
