@@ -48,7 +48,7 @@ C Osu!(https://github.com/ppy) подобным методом
 >
 > Компиляция exe
 >
-> python -m nuitka --follow-imports --windows-icon-from-ico=logo.ico --onefile '.\ALTA public.py'
+> python -m nuitka --follow-imports --windows-icon-from-ico=logo.ico '.\ALTA public.py' --onefile
 
 -- Помощь к выбору --
 
