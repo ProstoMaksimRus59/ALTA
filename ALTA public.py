@@ -6,7 +6,7 @@ if os.name != "nt": #уже давно не поверял под линукс �
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA v5.2_4 от Prosto_Maksim")
+        print("Версия ALTA v5.2_5 от Prosto_Maksim")
 print("Загрузка.    1/26")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
@@ -129,7 +129,7 @@ def lvlcal(fps,Timings,seting):
     result = point / Compression
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
     if seting != "2":
-        print("\nВерсия ALTA v5.2_4 от Prosto_Maksim")
+        print("\nВерсия ALTA v5.2_5 от Prosto_Maksim")
         print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
@@ -863,7 +863,7 @@ def freme(fps,Timings): #считает не точно но пойдет)
                 Counter3fp = Counter3fp + 1 #попытка эмулировать разные кадры))
                 if Counter3fp >= 4:
                     Counter3fp = 0                
-    print("\nВерсия ALTA v5.2_4 от Prosto_Maksim")
+    print("\nВерсия ALTA v5.2_5 от Prosto_Maksim")
     print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
     print("Фпс измерения:" + str(fps) + "\n")
     print(str(fps) +" fps фреймы:"+ str(Fremere[0]))
@@ -936,7 +936,7 @@ clear("0")
 print("Загрузка...    26/26")
 
 clear("0")
-print("Версия ALTA v5.2_4 от Prosto_Maksim")
+print("Версия ALTA v5.2_5 от Prosto_Maksim")
 print("Для помощи напишите help")
 
 while 1 == 1:
@@ -994,7 +994,7 @@ while 1 == 1:
                     print("  create.db - создать новую датабазу(Удалить если она была)")
                     print("  delete.db - Просто удалить установленную датабазу")
                     print("  chaid - дает поменять id у лвла")
-                    print("  convdb - конвертирует дб до текущей версии.")
+                    print("  conv.db - конвертирует дб до текущей версии.")
                     print("!Внимание виктор и верифер не как сами не свазываются! если кто-то верифнул лвл, добавьте отдельно как верифер и как виктор!")
                 case "3":
                     print(" Доп:")
@@ -1138,8 +1138,10 @@ while 1 == 1:
             clear("1")
         
         case "placal":
-            Placal("0","0")
-        
+            if auto == 6:#если только команда
+                Placal("0","0")
+            else: #если с ней что-то еще написано
+                Placal(requirements,'0')        
         case "fps": #Выбор кастом фпс
             try:
                 if auto == 3: #если только команда
