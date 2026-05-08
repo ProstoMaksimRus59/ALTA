@@ -6,7 +6,7 @@ if os.name != "nt": #уже давно не поверял под линукс �
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA v5.2_3 от Prosto_Maksim")
+        print("Версия ALTA v5.2_4 от Prosto_Maksim")
 print("Загрузка.    1/26")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
@@ -129,7 +129,7 @@ def lvlcal(fps,Timings,seting):
     result = point / Compression
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
     if seting != "2":
-        print("\nВерсия ALTA v5.2_3 от Prosto_Maksim")
+        print("\nВерсия ALTA v5.2_4 от Prosto_Maksim")
         print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
@@ -310,7 +310,7 @@ def addlvl():
         com4 = input(">")
         print("FPS")
         com5 = input(">")
-        print("idlvlvl:")
+        print("idlvl:")
         com6 = input(">")
         pp = lvlcal(com5,com4,"2")
         if pp == 0:
@@ -344,7 +344,7 @@ def addlvl():
     data.write("\nFPS:" + str(com5.lower()))
     data.write("\nbalance:" + str(fan.lower()))
     data.write("\nPP:" + str(pp.lower()))
-    data.write("\nidlvlvl:" + str(com6.lower()))
+    data.write("\nidlvl:" + str(com6.lower()))
     data.write("\nend\n")
     data.close()
 
@@ -725,7 +725,7 @@ print("Загрузка...    20/26")
 
 def lvlcha(lvl,type,nyper): #дает менять данные в базе о лвле
     
-    types = ["Author(S):","Verification:","Timings:","FPS:","balance:","PP:","idlvlvl:"]
+    types = ["Author(S):","Verification:","Timings:","FPS:","balance:","PP:","idlvl:"]
     data = open("Base/lvldatabase.altalvl", 'r')
     lvls = data.readlines()
     data.close()
@@ -863,7 +863,7 @@ def freme(fps,Timings): #считает не точно но пойдет)
                 Counter3fp = Counter3fp + 1 #попытка эмулировать разные кадры))
                 if Counter3fp >= 4:
                     Counter3fp = 0                
-    print("\nВерсия ALTA v5.2_3 от Prosto_Maksim")
+    print("\nВерсия ALTA v5.2_4 от Prosto_Maksim")
     print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
     print("Фпс измерения:" + str(fps) + "\n")
     print(str(fps) +" fps фреймы:"+ str(Fremere[0]))
@@ -883,14 +883,15 @@ def verdbtest(): #Сигналка на случай неправильной д
         datas = ""
         ttpyes = ""
         datas = data.readline()
+        if datas == "":
+            return 2        
         test = ''.join(datas.split(":")[0])
         test = test.split("\n")
         ttpyes = str("".join(types[count].split(":")[0].split("\n")))
         if test[0] != ttpyes:
-            print(test[0], ttpyes)
             print("Внимание версия ващей дб НЕ подерживается!!!!!")
             print("Любые действия с ней скорее всего ее уничтожать!!!!")
-            print("Я советую если хотите с ней работать написать команду 'convdb'")
+            print("Я советую если хотите с ней работать написать команду 'conv.db'")
             data.close()
             input("enter для продолжения>")
             return 1
@@ -925,7 +926,7 @@ def convdb():
         data = open("Base/lvldatabase.altalvl", 'w')
         for dd in dblist:
             if dd == "end":
-                data.write("idlvlvl:?\n")
+                data.write("idlvl:?\n")
             if dd != "":
                 data.write(dd + "\n")
         print("Успешно!")
@@ -935,7 +936,7 @@ clear("0")
 print("Загрузка...    26/26")
 
 clear("0")
-print("Версия ALTA v5.2_3 от Prosto_Maksim")
+print("Версия ALTA v5.2_4 от Prosto_Maksim")
 print("Для помощи напишите help")
 
 while 1 == 1:
@@ -1129,8 +1130,8 @@ while 1 == 1:
                     print("для этого водим")
                     print("1 - Название лвла")
                     print("2 - id(если убрать - '?')")
-                case "convdb":
-                    print("convdb - конвертирует дб до текущей версии.")
+                case "conv.db":
+                    print("conv.db - конвертирует дб до текущей версии.")
                     print(" Для конвертации тупо напишите ее и все!")
                     print(" ЕСЛИ ДБ НОВЕЕ АЛТЫ то оно не сможет конвертнуть!")
         case "clear":
@@ -1359,7 +1360,7 @@ while 1 == 1:
                 lvlcha(com, "6", com3)
             except FileNotFoundError:
              print("Датабаза не найдена")   
-        case "convdb":
+        case "conv.db":
             convdb()        
         case "top":
             try:
