@@ -6,7 +6,7 @@ if os.name != "nt": #уже давно не поверял под линукс �
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA v5.10 от Prosto_Maksim")
+        print("Версия ALTA v5.10_1 от Prosto_Maksim")
 print("Загрузка.    1/26")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
@@ -119,7 +119,7 @@ def lvlcal(fps,Timings,seting):
             СounterH[2] = СounterH[2] + 1
         if mc <= 20:
             point = point + (Referencepoint / (mc/1.05)) #считаем баллы за время тайминга
-        elif mc >=21 and mc < 30: 
+        elif mc >=21 and mc <= 30: 
             point = point + (Referencepoint / (mc))
         elif mc >= 31 and mc <= 60:
             point = point + (Referencepoint / (mc * 1.5))
@@ -144,7 +144,7 @@ def lvlcal(fps,Timings,seting):
     result = point / Compression
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
     if seting != "2":
-        print("\nВерсия ALTA v5.10 от Prosto_Maksim")
+        print("\nВерсия ALTA v5.10_1 от Prosto_Maksim")
         print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
@@ -878,7 +878,7 @@ def freme(fps,Timings): #считает не точно но пойдет)
                 Counter3fp = Counter3fp + 1 #попытка эмулировать разные кадры))
                 if Counter3fp >= 4:
                     Counter3fp = 0                
-    print("\nВерсия ALTA v5.10 от Prosto_Maksim")
+    print("\nВерсия ALTA v5.10_1 от Prosto_Maksim")
     print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
     print("Фпс измерения:" + str(fps) + "\n")
     print(str(fps) +" fps фреймы:"+ str(Fremere[0]))
@@ -951,7 +951,7 @@ clear("0")
 print("Загрузка...    26/26")
 
 clear("0")
-print("Версия ALTA v5.10 от Prosto_Maksim")
+print("Версия ALTA v5.10_1 от Prosto_Maksim")
 print("Для помощи напишите help")
 
 while 1 == 1:
