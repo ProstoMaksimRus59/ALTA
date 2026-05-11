@@ -6,7 +6,7 @@ if os.name != "nt": #уже давно не поверял под линукс �
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA v5.2_5 от Prosto_Maksim")
+        print("Версия ALTA v5.10 от Prosto_Maksim")
 print("Загрузка.    1/26")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
@@ -73,12 +73,13 @@ print("Загрузка..   2/26")
 
 def lvlcal(fps,Timings,seting):
     Referencepoint = 40000
+    СounterH = [0,0,0]
     Сounter = 0 #Сетчик таймингов
     HardestC = 99999999 #Сетчик самого сложного тайминга
     Mior = 0 #ср тайминг
     FreeC = 0
     point = 0
-    Compression = 216
+    Compression = 193.19
     Mior = 0
     if Timings == "0": #если ничего нет, то повторно попросить вести тайминги.
         print("\nПометка - Невидимые тайминги = сам тайминг / 2(В округление больше сторону)")
@@ -104,18 +105,32 @@ def lvlcal(fps,Timings,seting):
         except ValueError:
             print("Это точно тайминги?")
             return 0
-        if mc <= 40:
+        if mc <= 5:
+            mc = mc * (0.85**СounterH[0])
+            СounterH[0] = СounterH[0] + 1
+            СounterH[1] = СounterH[1] + 2
+            СounterH[2] = СounterH[2] + 3
+        elif mc <= 9:
+            mc = mc * (0.97**СounterH[1])
+            СounterH[1] = СounterH[1] + 1
+            СounterH[2] = СounterH[2] + 2
+        elif mc <= 15:
+            mc = mc * (0.98**СounterH[2])
+            СounterH[2] = СounterH[2] + 1
+        if mc <= 20:
             point = point + (Referencepoint / (mc/1.05)) #считаем баллы за время тайминга
-        elif mc >= 41 and mc <= 60:
-            point = point + (Referencepoint / (mc * 1.05))
+        elif mc >=21 and mc < 30: 
+            point = point + (Referencepoint / (mc))
+        elif mc >= 31 and mc <= 60:
+            point = point + (Referencepoint / (mc * 1.5))
         elif mc >= 60 and mc <= 65:
-            point = point + (Referencepoint / (mc * 1.1))
+            point = point + (Referencepoint / (mc * 2))
         elif mc >= 65 and mc <= 70:
-            point = point + (Referencepoint / (mc * 1.4))
-        elif mc >= 70 and mc <= 100:
             point = point + (Referencepoint / (mc * 2.5))
+        elif mc >= 70 and mc <= 100:
+            point = point + (Referencepoint / (mc * 3.0))
         elif mc >= 100 and mc <= 150:
-            point = point + (Referencepoint / (mc * 3.5))        
+            point = point + (Referencepoint / (mc * 5.0))        
         else:
             point = point + (Referencepoint / (mc * (mc / 9)))
         if int(Timing) < int(HardestC): #Если тайминг сложнее старого, то он записывается
@@ -129,7 +144,7 @@ def lvlcal(fps,Timings,seting):
     result = point / Compression
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
     if seting != "2":
-        print("\nВерсия ALTA v5.2_5 от Prosto_Maksim")
+        print("\nВерсия ALTA v5.10 от Prosto_Maksim")
         print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
@@ -362,13 +377,13 @@ def infolvl(lvl,setmode):
     while scan == 0:
         lvlscan = data.readline().rstrip('\n')
         if lvlscan.lower() == lvl.lower():
-            info = 6
+            info = 7
             while info != 0:
                 info = info - 1
                 lvlinfo = data.readline().rstrip('\n').lower()
                 if setmode == "1":
                     print(lvlinfo)
-                if info == 0:
+                if info == 1:
                     return lvlinfo.split(":")[-1]
                 scan = 1
                 good = 1
@@ -863,7 +878,7 @@ def freme(fps,Timings): #считает не точно но пойдет)
                 Counter3fp = Counter3fp + 1 #попытка эмулировать разные кадры))
                 if Counter3fp >= 4:
                     Counter3fp = 0                
-    print("\nВерсия ALTA v5.2_5 от Prosto_Maksim")
+    print("\nВерсия ALTA v5.10 от Prosto_Maksim")
     print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
     print("Фпс измерения:" + str(fps) + "\n")
     print(str(fps) +" fps фреймы:"+ str(Fremere[0]))
@@ -936,7 +951,7 @@ clear("0")
 print("Загрузка...    26/26")
 
 clear("0")
-print("Версия ALTA v5.2_5 от Prosto_Maksim")
+print("Версия ALTA v5.10 от Prosto_Maksim")
 print("Для помощи напишите help")
 
 while 1 == 1:
