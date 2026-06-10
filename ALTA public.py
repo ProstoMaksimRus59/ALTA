@@ -6,7 +6,7 @@ if os.name != "nt": #уже давно не поверял под линукс �
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA v5.10_1 от Prosto_Maksim")
+        print("Версия ALTA v5.11 от Prosto_Maksim")
 print("Загрузка.    1/26")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
@@ -119,9 +119,9 @@ def lvlcal(fps,Timings,seting):
             СounterH[2] = СounterH[2] + 1
         if mc <= 20:
             point = point + (Referencepoint / (mc/1.05)) #считаем баллы за время тайминга
-        elif mc >=21 and mc <= 30: 
-            point = point + (Referencepoint / (mc))
-        elif mc >= 31 and mc <= 60:
+        elif mc >=20 and mc <= 30: 
+            point = point + (Referencepoint / (mc * 1.4))
+        elif mc >= 30 and mc <= 60:
             point = point + (Referencepoint / (mc * 1.5))
         elif mc >= 60 and mc <= 65:
             point = point + (Referencepoint / (mc * 2))
@@ -144,7 +144,7 @@ def lvlcal(fps,Timings,seting):
     result = point / Compression
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
     if seting != "2":
-        print("\nВерсия ALTA v5.10_1 от Prosto_Maksim")
+        print("\nВерсия ALTA v5.11 от Prosto_Maksim")
         print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
@@ -878,7 +878,7 @@ def freme(fps,Timings): #считает не точно но пойдет)
                 Counter3fp = Counter3fp + 1 #попытка эмулировать разные кадры))
                 if Counter3fp >= 4:
                     Counter3fp = 0                
-    print("\nВерсия ALTA v5.10_1 от Prosto_Maksim")
+    print("\nВерсия ALTA v5.11 от Prosto_Maksim")
     print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
     print("Фпс измерения:" + str(fps) + "\n")
     print(str(fps) +" fps фреймы:"+ str(Fremere[0]))
@@ -947,11 +947,42 @@ def convdb():
         print("Успешно!")
         data.close()
         return 7
+
+def vido(fps,tim):
+    print("Бета версия помощника(если криво наделили то вылет будет)")
+    file = input("файл от монтажки>")
+    files = open(file,'r')
+    filesall = files.read()
+    file1 = filesall.split('pp</property>')
+    file2 = []
+    for fil in file1:
+        file2.append(fil.split('<property name="argument">data'))
+    timhere = ''
+    anti = 0
+    count = 0
+    files = open(file + 'alta', 'w')
+    files.write(file2[count][0])
+    files.write('<property name="argument">')
+    files.write('0.0pp</property>')
+    count = count + 1
+    for stas in tim.split(';'):
+        if anti != 0:
+            timhere = timhere + ";" + stas
+        else:
+            timhere = stas
+            anti = 1
+        autotim = lvlcal(fps,timhere,'2')
+        files.write(file2[count][0])
+        files.write('<property name="argument">')
+        files.write(str(autotim) + 'pp</property>')
+        count = count + 1
+    files.write(file2[count][0])
+    files.close()
+    print("пп добавлены в файл вашего видео!")
 clear("0")
 print("Загрузка...    26/26")
-
 clear("0")
-print("Версия ALTA v5.10_1 от Prosto_Maksim")
+print("Версия ALTA v5.11 от Prosto_Maksim")
 print("Для помощи напишите help")
 
 while 1 == 1:
@@ -1020,6 +1051,7 @@ while 1 == 1:
                     print("  exit - выйди из проги(можно юзать Ctrl + C )")
                     print("  dev - список всех кто принимал участие и так-далее")
                     print("  frep - примерное измерение фрейм перфектов")
+                    print('  helper.vido - автомат ставить пп на монтаже!')
                 case "fps":
                     print("Команда FPS - для изменения фпса расчета пп")
                     print("  Еще при пропуска фпса в chatim будет фпс который вы указали в fps")
@@ -1149,6 +1181,12 @@ while 1 == 1:
                     print("conv.db - конвертирует дб до текущей версии.")
                     print(" Для конвертации тупо напишите ее и все!")
                     print(" ЕСЛИ ДБ НОВЕЕ АЛТЫ то оно не сможет конвертнуть!")
+                case "helper.vido":
+                    print("conv.db - Автомат подсчета пп при монтаже!")
+                    print(" Для подсчета нужно - ")
+                    print(" 1.тайминги уровня")
+                    print(" 2.уже нарезаный лвл в kdenlive!!!(где доложны быть пп - datapp - доложно быть написано)")
+                    print(" если все есть то просто водим тайминги и кидаем лвл")
         case "clear":
             clear("1")
         
@@ -1390,4 +1428,9 @@ while 1 == 1:
             print("Лицензия - GNU GPL v3 - https://www.gnu.org/licenses/quick-guide-gplv3.ru.html")
         case "debug.1":
             print(debuglvlcal()[:-1])
-        
+        case "helper.vido":
+            if auto == 11:
+                com = input("Вставьте тайминги>")
+                vido(TPS,com)
+            else:
+                vido(TPS,requirements)
