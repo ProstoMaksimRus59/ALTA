@@ -6,7 +6,7 @@ if os.name != "nt": #уже давно не поверял под линукс �
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA v5.11_1 от Prosto_Maksim")
+        print("Версия ALTA v5.11_2 от Prosto_Maksim")
 print("Загрузка.    1/27")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
@@ -144,7 +144,7 @@ def lvlcal(fps,Timings,seting):
     result = point / Compression
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
     if seting != "2":
-        print("\nВерсия ALTA v5.11_1 от Prosto_Maksim")
+        print("\nВерсия ALTA v5.11_2 от Prosto_Maksim")
         print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
@@ -878,7 +878,7 @@ def freme(fps,Timings): #считает не точно но пойдет)
                 Counter3fp = Counter3fp + 1 #попытка эмулировать разные кадры))
                 if Counter3fp >= 4:
                     Counter3fp = 0                
-    print("\nВерсия ALTA v5.11_1 от Prosto_Maksim")
+    print("\nВерсия ALTA v5.11_2 от Prosto_Maksim")
     print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
     print("Фпс измерения:" + str(fps) + "\n")
     print(str(fps) +" fps фреймы:"+ str(Fremere[0]))
@@ -984,7 +984,7 @@ def vido(fps,tim):
 clear("0")
 print("Загрузка...    27/27")
 clear("0")
-print("Версия ALTA v5.11_1 от Prosto_Maksim")
+print("Версия ALTA v5.11_2 от Prosto_Maksim")
 print("Для помощи напишите help")
 
 while 1 == 1:
@@ -1184,11 +1184,11 @@ while 1 == 1:
                     print(" Для конвертации тупо напишите ее и все!")
                     print(" ЕСЛИ ДБ НОВЕЕ АЛТЫ то оно не сможет конвертнуть!")
                 case "helper.vido":
-                    print("conv.db - Автомат подсчета пп при монтаже!")
+                    print("helper.vido - Автомат подсчета пп при монтаже!")
                     print(" Для подсчета нужно - ")
                     print(" 1.тайминги уровня")
-                    print(" 2.уже нарезаный лвл в kdenlive!!!(где доложны быть пп - datapp - доложно быть написано)")
-                    print(" если все есть то просто водим тайминги и кидаем лвл")
+                    print(" 2.уже нарезаный лвл в kdenlive!!!(где доложны быть надпись про PP - 'datapp' - доложно быть написано)")
+                    print(" если все есть то просто водим тайминги и кидаем файл от монтажки")
         case "clear":
             clear("1")
         
