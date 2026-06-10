@@ -6,8 +6,8 @@ if os.name != "nt": #уже давно не поверял под линукс �
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA v5.11 от Prosto_Maksim")
-print("Загрузка.    1/26")
+        print("Версия ALTA v5.11_1 от Prosto_Maksim")
+print("Загрузка.    1/27")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
     hardest = 1 #по название доложно понятно быть)
@@ -69,7 +69,7 @@ def Placal(folder,data): #Писал пиздец давно, так-что по
                     print("все!")
                 file.close()
 clear("0")
-print("Загрузка..   2/26")
+print("Загрузка..   2/27")
 
 def lvlcal(fps,Timings,seting):
     Referencepoint = 40000
@@ -79,7 +79,7 @@ def lvlcal(fps,Timings,seting):
     Mior = 0 #ср тайминг
     FreeC = 0
     point = 0
-    Compression = 193.19
+    Compression = 170.65
     Mior = 0
     if Timings == "0": #если ничего нет, то повторно попросить вести тайминги.
         print("\nПометка - Невидимые тайминги = сам тайминг / 2(В округление больше сторону)")
@@ -124,11 +124,11 @@ def lvlcal(fps,Timings,seting):
         elif mc >= 30 and mc <= 60:
             point = point + (Referencepoint / (mc * 1.5))
         elif mc >= 60 and mc <= 65:
-            point = point + (Referencepoint / (mc * 2))
+            point = point + (Referencepoint / (mc * 3.2))
         elif mc >= 65 and mc <= 70:
-            point = point + (Referencepoint / (mc * 2.5))
+            point = point + (Referencepoint / (mc * 4.5))
         elif mc >= 70 and mc <= 100:
-            point = point + (Referencepoint / (mc * 3.0))
+            point = point + (Referencepoint / (mc * 6.0))
         elif mc >= 100 and mc <= 150:
             point = point + (Referencepoint / (mc * 5.0))        
         else:
@@ -144,7 +144,7 @@ def lvlcal(fps,Timings,seting):
     result = point / Compression
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
     if seting != "2":
-        print("\nВерсия ALTA v5.11 от Prosto_Maksim")
+        print("\nВерсия ALTA v5.11_1 от Prosto_Maksim")
         print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
@@ -157,7 +157,7 @@ def lvlcal(fps,Timings,seting):
     return str(round(result, 1))
 
 clear("0")
-print("Загрузка...   3/26")
+print("Загрузка...   3/27")
 
 def debuglvlcal(): #создано чисто для проверки(не для обычного юзера)
     data = ''
@@ -169,7 +169,7 @@ def debuglvlcal(): #создано чисто для проверки(не дл�
         frame = frame + 1
 
 clear("0")
-print("Загрузка...   4/26")
+print("Загрузка...   4/27")
 
 def settingfiles(mode, typE, Number): #Отвечает за сохранения настроек в файл. ГОВНО КОД потом перепишу!
     
@@ -262,7 +262,7 @@ def settingfiles(mode, typE, Number): #Отвечает за сохранени�
                   Filesetting.write("lvlbanace:" + str(Number) + "\n")
                   Filesetting.close()  
 clear("0")
-print("Загрузка.     5/26")
+print("Загрузка.     5/27")
 
 def conv(Timings): #Ну... просто ; среть и все)
     coun = len(str(Timings))
@@ -276,7 +276,7 @@ def conv(Timings): #Ну... просто ; среть и все)
         coun = coun - 1
 
 clear("0")
-print("Загрузка..    6/26")
+print("Загрузка..    6/27")
 
 def Victors(lvl):
     try:
@@ -302,7 +302,7 @@ def Victors(lvl):
     return all
 
 clear("0")
-print("Загрузка...   7/26")
+print("Загрузка...   7/27")
 
 standard = settingfiles("read","fps",1) #фпс по умолчанию
 autoclear = settingfiles("read", "clear", 1) #какой режим чистки
@@ -310,7 +310,7 @@ KZbalance = settingfiles("read", "lvlbanace", 1)
 TPS = int(standard) #Переносится стандартный фпс в переменную где с ним будут работать.
 
 clear("0")
-print("Загрузка.     8/26")
+print("Загрузка.     8/27")
 
 def addlvl():
 
@@ -364,7 +364,7 @@ def addlvl():
     data.close()
 
 clear("0")
-print("Загрузка..    9/26")
+print("Загрузка..    9/27")
 
 def infolvl(lvl,setmode):
     good = 0
@@ -397,7 +397,7 @@ def infolvl(lvl,setmode):
     data.close()
 
 clear("0")
-print("Загрузка...   10/26")
+print("Загрузка...   10/27")
 
 def addvict(Player,lvld): #Дает добавить лвл игроку
     try:
@@ -457,7 +457,7 @@ def addvict(Player,lvld): #Дает добавить лвл игроку
     data.close()
 
 clear("0")
-print("Загрузка.     11/26")
+print("Загрузка.     11/27")
 
 def createdb():
     files = os.listdir() #Проверка на наличие уже датабазы
@@ -480,7 +480,7 @@ def createdb():
     print("Датабаза создана!")
 
 clear("0")
-print("Загрузка..    12/26")
+print("Загрузка..    12/27")
 
 def addpla(pla):
     files = os.listdir("Base/")
@@ -496,7 +496,7 @@ def addpla(pla):
     print("Игрок добавлен")
 
 clear("0")
-print("Загрузка...   13/26")
+print("Загрузка...   13/27")
 
 def loaddb():
     files = os.listdir() #Проверка на наличие уже датабазы
@@ -527,7 +527,7 @@ def loaddb():
     print("Датабаза загружена!")
 
 clear("0")
-print("Загрузка...   14/26")
+print("Загрузка...   14/27")
 
 def savedb():
     try:
@@ -552,7 +552,7 @@ def savedb():
     print("Датабаза сохранена!")
 
 clear("0")
-print("Загрузка.     15/26")
+print("Загрузка.     15/27")
 
 def infopla(pla):
     if pla == "0":
@@ -624,7 +624,7 @@ def plalvlcomm(requirements): #Для безопастности вынес эт
                 top(alllvl,pplvl)#Делает топ
 
 clear("0")
-print("Загрузка..     16/26")
+print("Загрузка..     16/27")
 
 def tophelper(plaer):
         
@@ -651,7 +651,7 @@ def tophelper(plaer):
                 pparr.append(pp)
         return pparr
 clear("0")
-print("Загрузка...    17/26")
+print("Загрузка...    17/27")
 
 def balanceKZ(fps,sequence,lvlcalmode): #Не мое, так-что писать ничего не буду)
     score = 0
@@ -684,7 +684,7 @@ def balanceKZ(fps,sequence,lvlcalmode): #Не мое, так-что писать
     return str(round(points,2))+'/10'
 
 clear("0")
-print("Загрузка.      18/26")
+print("Загрузка.      18/27")
 
 def scanpplvl(lvl):
     pp = lvlcal(scanerpla(lvl,"4"),scanerpla(lvl,"3"),"2")
@@ -697,7 +697,7 @@ def scanpplvl(lvl):
         addvict(plar,lvl)
 
 clear("0")
-print("Загрузка..     19/26")
+print("Загрузка..     19/27")
 
 def deleteplalvl(pla, lvl): #Дает удалить пройденный лвл у игрока
     pla = pla + ".altapl"
@@ -736,7 +736,7 @@ def deleteplalvl(pla, lvl): #Дает удалить пройденный лвл
         delet = delet + 1
 
 clear("0")
-print("Загрузка...    20/26")
+print("Загрузка...    20/27")
 
 def lvlcha(lvl,type,nyper): #дает менять данные в базе о лвле
     
@@ -766,7 +766,7 @@ def lvlcha(lvl,type,nyper): #дает менять данные в базе о �
     data.close()
 
 clear("0")
-print("Загрузка.      21/26")
+print("Загрузка.      21/27")
 
 def scanerpla(lvl,type):
     
@@ -785,7 +785,7 @@ def scanerpla(lvl,type):
         cout = cout + 1
 
 clear("0")
-print("Загрузка..     22/26")
+print("Загрузка..     22/27")
 
 def top(data,pp): #Делает топ
     datapp = ([])
@@ -804,7 +804,7 @@ def top(data,pp): #Делает топ
         cont = cont + 1
 
 clear("0")
-print("Загрузка...    23/26")
+print("Загрузка...    23/27")
 
 def scanallvl(): #Ищет все лвла
     
@@ -824,7 +824,7 @@ def scanallvl(): #Ищет все лвла
     return alllvl
 
 clear("0")
-print("Загрузка...    24/26")
+print("Загрузка...    24/27")
 
 def freme(fps,Timings): #считает не точно но пойдет)
     Сounter = 0
@@ -878,14 +878,14 @@ def freme(fps,Timings): #считает не точно но пойдет)
                 Counter3fp = Counter3fp + 1 #попытка эмулировать разные кадры))
                 if Counter3fp >= 4:
                     Counter3fp = 0                
-    print("\nВерсия ALTA v5.11 от Prosto_Maksim")
+    print("\nВерсия ALTA v5.11_1 от Prosto_Maksim")
     print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
     print("Фпс измерения:" + str(fps) + "\n")
     print(str(fps) +" fps фреймы:"+ str(Fremere[0]))
     print(str(int(fps)/2) +" fps фреймы:"+ str(Fremere[1])+" +-")
     print(str(int(fps)/4) +" fps фреймы:"+ str(Fremere[2])+" +-")
 clear("0")
-print("Загрузка...    24/26")
+print("Загрузка...    24/27")
 def verdbtest(): #Сигналка на случай неправильной дб
     types = ["Author(S):","Verification:","Timings:","FPS:","balance:","PP:","idlvl:","end"]
     try:
@@ -916,7 +916,7 @@ def verdbtest(): #Сигналка на случай неправильной д
         count = count + 1
 verdbtest()
 clear("0")
-print("Загрузка...    25/26")
+print("Загрузка...    25/27")
 
 def convdb():
     data = open("Base/lvldatabase.altalvl", 'r')
@@ -947,9 +947,11 @@ def convdb():
         print("Успешно!")
         data.close()
         return 7
+clear("0")
+print("Загрузка...    26/27")
 
 def vido(fps,tim):
-    print("Бета версия помощника(если криво наделили то вылет будет)")
+    print("Помните это версия помощника(если криво наделили то вылет будет)")
     file = input("файл от монтажки>")
     files = open(file,'r')
     filesall = files.read()
@@ -980,9 +982,9 @@ def vido(fps,tim):
     files.close()
     print("пп добавлены в файл вашего видео!")
 clear("0")
-print("Загрузка...    26/26")
+print("Загрузка...    27/27")
 clear("0")
-print("Версия ALTA v5.11 от Prosto_Maksim")
+print("Версия ALTA v5.11_1 от Prosto_Maksim")
 print("Для помощи напишите help")
 
 while 1 == 1:
