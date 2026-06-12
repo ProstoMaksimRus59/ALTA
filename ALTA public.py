@@ -6,7 +6,7 @@ if os.name != "nt": #уже давно не поверял под линукс �
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA v5.11_3 от Prosto_Maksim")
+        print("Версия ALTA v5.12 от Prosto_Maksim")
 print("Загрузка.    1/27")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
@@ -100,10 +100,10 @@ def lvlcal(fps,Timings,seting):
         try:
             mc = 1000 / (int(fps) / int(Timing)) #считает время тайминга
         except ZeroDivisionError:
-            print("Лвл не проходим!")
+            print("Лвл не проходим! > ;" + str(Timing) + "; / Номер - " + str(Сounter))
             return 0
         except ValueError:
-            print("Это точно тайминги?")
+            print("Это точно тайминги? > ;" + str(Timing) + "; / Номер - " + str(Сounter))
             return 0
         if mc <= 5:
             mc = mc * (0.85**СounterH[0])
@@ -144,7 +144,7 @@ def lvlcal(fps,Timings,seting):
     result = point / Compression
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
     if seting != "2":
-        print("\nВерсия ALTA v5.11_3 от Prosto_Maksim")
+        print("\nВерсия ALTA v5.12 от Prosto_Maksim")
         print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
@@ -856,7 +856,7 @@ def freme(fps,Timings): #считает не точно но пойдет)
         Сounter = Сounter + 1
         T = int(T)
         
-        if T == 1: #первый фп(например 240фп)
+        if T <= 1: #первый фп(например 240фп)
             Fremere[0] = Fremere[0] + 1
         
         elif T == 2 or T == 3: #Второй фп(например 120фп)
@@ -878,7 +878,7 @@ def freme(fps,Timings): #считает не точно но пойдет)
                 Counter3fp = Counter3fp + 1 #попытка эмулировать разные кадры))
                 if Counter3fp >= 4:
                     Counter3fp = 0                
-    print("\nВерсия ALTA v5.11_3 от Prosto_Maksim")
+    print("\nВерсия ALTA v5.12 от Prosto_Maksim")
     print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
     print("Фпс измерения:" + str(fps) + "\n")
     print(str(fps) +" fps фреймы:"+ str(Fremere[0]))
@@ -951,7 +951,10 @@ clear("0")
 print("Загрузка...    26/27")
 
 def vido(fps,tim):
-    file = input("файл от монтажки>")
+    localfrep = [0,0,0,0,0]
+    if lvlcal(fps,tim,'2') == 0:
+        return 0
+    file = input("файл .kdenlive>").replace('"', '')
     files = open(file,'r')
     filesall = files.read()
     file1 = filesall.split('pp</property>')
@@ -968,7 +971,7 @@ def vido(fps,tim):
     files = open(file + 'alta', 'w')
     files.write(file2[count][0])
     files.write('<property name="argument">')
-    files.write('0.0pp</property>')
+    files.write('frame-\n1 - 0\n2- 0\n3 - 0\n4 - 0\n5 - 0\n0.0pp</property>')
     count = count + 1
     for stas in tim.split(';'):
         if anti != 0:
@@ -976,10 +979,12 @@ def vido(fps,tim):
         else:
             timhere = stas
             anti = 1
+        if int(stas) <= 5:
+            localfrep[int(stas)-1] = localfrep[int(stas)-1] + 1
         autotim = lvlcal(fps,timhere,'2')
         files.write(file2[count][0])
         files.write('<property name="argument">')
-        files.write(str(autotim) + 'pp</property>')
+        files.write('\nframe-' + str(stas) + "\n1-"+ str(localfrep[0]) + "\n2-"+ str(localfrep[1]) + "\n3-"+ str(localfrep[2]) + "\n4-"+ str(localfrep[3]) + "\n5-"+ str(localfrep[4]) +"\n" + str(autotim) + 'pp</property>')
         count = count + 1
     files.write(file2[count][0])
     files.close()
@@ -987,7 +992,7 @@ def vido(fps,tim):
 clear("0")
 print("Загрузка...    27/27")
 clear("0")
-print("Версия ALTA v5.11_3 от Prosto_Maksim")
+print("Версия ALTA v5.12 от Prosto_Maksim")
 print("Для помощи напишите help")
 
 while 1 == 1:
@@ -1187,10 +1192,10 @@ while 1 == 1:
                     print(" Для конвертации тупо напишите ее и все!")
                     print(" ЕСЛИ ДБ НОВЕЕ АЛТЫ то оно не сможет конвертнуть!")
                 case "helper.vido":
-                    print("helper.vido - Автомат подсчета пп при монтаже!")
+                    print("helper.vido - Автомат подсчета кадров и пп при монтаже!")
                     print(" Для подсчета нужно - ")
                     print(" 1.тайминги уровня")
-                    print(" 2.уже нарезаный лвл в kdenlive!!!(где доложны быть надпись про PP - 'datapp' - доложно быть написано)")
+                    print(" 2.уже нарезаный лвл в kdenlive!!!(где доложны быть надпись про - 'datapp' - доложно быть написано)")
                     print(" если все есть то просто водим тайминги и кидаем файл от монтажки")
         case "clear":
             clear("1")
@@ -1203,7 +1208,7 @@ while 1 == 1:
         case "fps": #Выбор кастом фпс
             try:
                 if auto == 3: #если только команда
-                    TPS = float(input(">>"))
+                    TPS = int(input(">>"))
                 else: #если с ней что-то еще написано
                     TPS = int(requirements)   #Выбирает последную из всего массива и считает как за выбранный фпс
             except ValueError: #защита от идиота
@@ -1218,7 +1223,7 @@ while 1 == 1:
         case "fps.set":
             try:
                 if auto == 7: #если только команда
-                    standard = round(float(input(">>")))
+                    standard = int(input(">>"))
                     settingfiles("white","fps", standard)
                 else: #если с ней что-то еще написано
                     standard = int(requirements)
@@ -1428,9 +1433,10 @@ while 1 == 1:
             except FileNotFoundError:
                 print("Датабаза не найдена")
         case "dev":
-            print("Главный - Prosto_Maksim - https://youtube.com/@Prosto_Maksim\n")
-            print("Спасибо - SpaceKZ за идею и за (balcal) - https://www.youtube.com/@spaceKZ1\n")
-            print("Лицензия - GNU GPL v3 - https://www.gnu.org/licenses/quick-guide-gplv3.ru.html")
+            print("ALTA V5.12 2023-2026")
+            print(" Главный - Prosto_Maksim - https://youtube.com/@Prosto_Maksim\n")
+            print(" Спасибо - SpaceKZ за идею и за (balcal) - https://www.youtube.com/@spaceKZ1\n")
+            print(" Лицензия - GNU GPL v3 - https://www.gnu.org/licenses/quick-guide-gplv3.ru.html")
         case "debug.1":
             print(debuglvlcal()[:-1])
         case "helper.vido":
