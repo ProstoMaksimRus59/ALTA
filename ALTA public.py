@@ -6,7 +6,7 @@ if os.name != "nt": #уже давно не поверял под линукс �
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA v5.12 от Prosto_Maksim")
+        print("Версия ALTA v5.12_1 от Prosto_Maksim")
 print("Загрузка.    1/27")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
@@ -144,7 +144,7 @@ def lvlcal(fps,Timings,seting):
     result = point / Compression
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
     if seting != "2":
-        print("\nВерсия ALTA v5.12 от Prosto_Maksim")
+        print("\nВерсия ALTA v5.12_1 от Prosto_Maksim")
         print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
@@ -856,7 +856,7 @@ def freme(fps,Timings): #считает не точно но пойдет)
         Сounter = Сounter + 1
         T = int(T)
         
-        if T <= 1: #первый фп(например 240фп)
+        if T == 1: #первый фп(например 240фп)
             Fremere[0] = Fremere[0] + 1
         
         elif T == 2 or T == 3: #Второй фп(например 120фп)
@@ -878,7 +878,7 @@ def freme(fps,Timings): #считает не точно но пойдет)
                 Counter3fp = Counter3fp + 1 #попытка эмулировать разные кадры))
                 if Counter3fp >= 4:
                     Counter3fp = 0                
-    print("\nВерсия ALTA v5.12 от Prosto_Maksim")
+    print("\nВерсия ALTA v5.12_1 от Prosto_Maksim")
     print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
     print("Фпс измерения:" + str(fps) + "\n")
     print(str(fps) +" fps фреймы:"+ str(Fremere[0]))
@@ -971,7 +971,7 @@ def vido(fps,tim):
     files = open(file + 'alta', 'w')
     files.write(file2[count][0])
     files.write('<property name="argument">')
-    files.write('frame-\n1 - 0\n2- 0\n3 - 0\n4 - 0\n5 - 0\n0.0pp</property>')
+    files.write('frame- \n1 - 0\n2- 0\n3 - 0\n4 - 0\n5 - 0\n0.0pp</property>')
     count = count + 1
     for stas in tim.split(';'):
         if anti != 0:
@@ -984,7 +984,7 @@ def vido(fps,tim):
         autotim = lvlcal(fps,timhere,'2')
         files.write(file2[count][0])
         files.write('<property name="argument">')
-        files.write('\nframe-' + str(stas) + "\n1-"+ str(localfrep[0]) + "\n2-"+ str(localfrep[1]) + "\n3-"+ str(localfrep[2]) + "\n4-"+ str(localfrep[3]) + "\n5-"+ str(localfrep[4]) +"\n" + str(autotim) + 'pp</property>')
+        files.write('frame-' + str(stas) + "\n1-"+ str(localfrep[0]) + "\n2-"+ str(localfrep[1]) + "\n3-"+ str(localfrep[2]) + "\n4-"+ str(localfrep[3]) + "\n5-"+ str(localfrep[4]) +"\n" + str(autotim) + 'pp</property>')
         count = count + 1
     files.write(file2[count][0])
     files.close()
@@ -992,7 +992,7 @@ def vido(fps,tim):
 clear("0")
 print("Загрузка...    27/27")
 clear("0")
-print("Версия ALTA v5.12 от Prosto_Maksim")
+print("Версия ALTA v5.12_1 от Prosto_Maksim")
 print("Для помощи напишите help")
 
 while 1 == 1:
@@ -1433,7 +1433,7 @@ while 1 == 1:
             except FileNotFoundError:
                 print("Датабаза не найдена")
         case "dev":
-            print("ALTA V5.12 2023-2026")
+            print("ALTA v5.12_1 2023-2026")
             print(" Главный - Prosto_Maksim - https://youtube.com/@Prosto_Maksim\n")
             print(" Спасибо - SpaceKZ за идею и за (balcal) - https://www.youtube.com/@spaceKZ1\n")
             print(" Лицензия - GNU GPL v3 - https://www.gnu.org/licenses/quick-guide-gplv3.ru.html")
