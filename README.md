@@ -9,7 +9,7 @@
 
 C Osu!(https://github.com/ppy) подобным методом
 
-Для ее работы(расчета сложности) нужна заранее устоновленный какой-то "Frame step" Можно от EclipseMenu(https://github.com/EclipseMenu/)
+Для ее работы(расчета сложности) нужна заранее устоновленный какой-то "Frame step и frame counter" Можно от EclipseMenu(https://github.com/EclipseMenu/)
 
 За идею спасибо SpaceKZ (и за balcal)(https://www.youtube.com/@spaceKZ1)
 
