@@ -1,4 +1,5 @@
 import sys, re, os, shutil, random, zipfile, statistics, math
+from colorama import Fore
 if os.name != "nt": #уже давно не поверял под линукс так-что поставил это
     print("ALTA не проверяется под linux и других системах")
     print("Если она вылетает то пишите ко мне Prosto_Maksim")
@@ -6,8 +7,8 @@ if os.name != "nt": #уже давно не поверял под линукс �
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
-        print("Версия ALTA v5.13 от Prosto_Maksim")
-print("Загрузка.    1/27")
+        print("Версия "+altaver("color")+" от Prosto_Maksim")
+print("Загрузка[/]   1/29")
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
     hardest = 1 #по название доложно понятно быть)
@@ -36,7 +37,7 @@ def Placal(folder,data): #Писал пиздец давно, так-что по
         try:
             lvl = int(pp1[-1]) #для удобства (чтоб не по сто раз писать [0]) + все таки я написал -1 и теперь можно и арабские цифрами позоваться
         except IndexError:
-            print("Файл поврежден")
+            print("placal:Файл поврежден")
             return 0
         
         if lvl != 0:
@@ -69,47 +70,91 @@ def Placal(folder,data): #Писал пиздец давно, так-что по
                     print("все!")
                 file.close()
 clear("0")
-print("Загрузка..   2/27")
-
+print("Загрузка[-]   2/29")
 def lvlcal(fps,Timings,seting):
-    Referencepoint = 40000
+    v6mode = 0
+    Referencepoint = 5000
+    ReferencepointFRAME = 10000
     СounterH = [0,0,0]
     Сounter = 0 #Сетчик таймингов
     HardestC = 99999999 #Сетчик самого сложного тайминга
     Mior = 0 #ср тайминг
     FreeC = 0
     point = 0
-    Compression = 170.65
+    Compression = 16.797
+    v6com = 45.0862
     Mior = 0
+    oldframeting = [0,0]
+    Timingscolor = ''
+    Xframe = 0
+    ERRORFRAMETIM = 0
     if Timings == "0": #если ничего нет, то повторно попросить вести тайминги.
-        print("\nПометка - Невидимые тайминги = сам тайминг / 2(В округление больше сторону)")
+        print("\nПометка - Если тайминг такой например - невидимый вейв\n(тоесь слепой 100%) то перед таймингом писать '?'")
         print("Пометка - Любые клики которым просто достаточно нажать заранее - не должны учитываться никак")
-        print("Пометка - Если тайминги слишком простые поставьте фпс ниже")
         print("Пометка - Если у вас 0 кадров поставьте фпс больше")        
-        print("Тайминги так записываются - \n Тайминг;Тайминг;Тайминг;Тайминг | например 1;3;56;1;3 ")        
-
-        try:
+        print("Тайминги так записываются(legacy режим) - \n Тайминг;Тайминг;Тайминг;Тайминг  | например 1;3;56;1;3 ")        
+        print("Тайминги так записываются(v6 mode) - \n Тайминг-кадр;Тайминг-кадр;Тайминг-кадр;Тайминг-кадр  | например 1-240;3-250;56-400;1-450;?3-460 ")
+        try: 
             Timings = input(">")
         except ValueError:
-            print("Неправильный формат!")
+            print("lvlcal:Неправильный формат!(самая странная ошибка так как ее уже нельзя обычным путем получить)")
             return 0
         except KeyboardInterrupt:
             sys.exit()
     Timings = str(Timings)
     for Timing in Timings.split(";"): #Делаем масив по ; и сразу заходим в цикл for
+        Timing = Timing.split("-")
+        OGTiming = Timing[0]
         try:
-            mc = 1000 / (int(fps) / int(Timing)) #считает время тайминга
+            if Timing[0][0] == "?":  
+                try:
+                    Timing[0] = int(Timing[0][1:]) / 2
+                    Timing[0] = str(math.ceil(Timing[0]))
+                except:
+                    lol = 1
+        except:
+            lol = 1
+        if len(Timing) != 2:
+            ERRORFRAMETIM = 1
+        if len(Timing) != 1: #v6 mode!
+            try:
+                Xframe = stabily(fps,Timing[1],oldframeting)
+            except ValueError:
+                print("lvlcal:Это точно кадр? > -" + str(Timing[1]) + "; / Номер - " + str(Сounter))
+                return 0
+            v6mode = 1
+            try:
+                try:
+                    Fmc = 1000 / (int(fps) / int(Timing[1]))
+                except ZeroDivisionError:
+                    print("lvlcal:Этот первый клик - баффер> " + str(Timing[0])+"-"+str(Timing[1]))
+                    return 0
+                Fmc = round(Fmc,4)
+                if Fmc < oldframeting[0]:
+                    print("lvlcal:Назад в будуще? > -"  + str(Timing[1]) + "; / Номер - " + str(Сounter))
+                    return 0
+            except ValueError:
+                print("lvlcal:Это точно кадр? > -" + str(Timing[1]) + "; / Номер - " + str(Сounter))
+                return 0         
+            ############ память
+            oldframeting[1] = float(oldframeting[0])
+            oldframeting[0] = float(Fmc)
+            if Сounter != 0:
+                Timingscolor = f'{Timingscolor};'
+            Timingscolor = f'{Timingscolor}{Fore.RED}{OGTiming}{Fore.RESET}-{Fore.GREEN}{Timing[1]}{Fore.RESET}'
+        try:
+            mc = 1000 / (int(fps) / int(Timing[0])) #считает время тайминга
         except ZeroDivisionError:
-            print("Лвл не проходим! > ;" + str(Timing) + "; / Номер - " + str(Сounter))
+            print("lvlcal:Лвл не проходим! > ;" + str(OGTiming) + "- / Номер - " + str(Сounter))
             return 0
         except ValueError:
-            print("Это точно тайминги? > ;" + str(Timing) + "; / Номер - " + str(Сounter))
+            print("lvlcal:Это точно тайминги? > ;" + str(OGTiming) + "- / Номер - " + str(Сounter))
             return 0
-        if mc <= 5:
-            mc = mc * (0.85**СounterH[0])
+        if mc <= 5: #множители
+            mc = mc * (0.80**СounterH[0])
             СounterH[0] = СounterH[0] + 1
             СounterH[1] = СounterH[1] + 2
-            СounterH[2] = СounterH[2] + 3
+            СounterH[2] = СounterH[2] + 3 
         elif mc <= 9:
             mc = mc * (0.97**СounterH[1])
             СounterH[1] = СounterH[1] + 1
@@ -117,48 +162,78 @@ def lvlcal(fps,Timings,seting):
         elif mc <= 15:
             mc = mc * (0.98**СounterH[2])
             СounterH[2] = СounterH[2] + 1
+
         if mc <= 20:
-            point = point + (Referencepoint / (mc/1.05)) #считаем баллы за время тайминга
+            point = point + (Referencepoint + (ReferencepointFRAME * Xframe)) / ((mc/1.05)) #считаем баллы за время тайминга
         elif mc >=20 and mc <= 30: 
-            point = point + (Referencepoint / (mc * 1.4))
+            point = point + (Referencepoint + (ReferencepointFRAME * Xframe)) / (mc * (2))
         elif mc >= 30 and mc <= 60:
-            point = point + (Referencepoint / (mc * 1.5))
+            point = point + (Referencepoint + (ReferencepointFRAME * Xframe)) / (mc * (3))
         elif mc >= 60 and mc <= 65:
-            point = point + (Referencepoint / (mc * 3.2))
+            point = point + (Referencepoint) / (mc * (3.5))
         elif mc >= 65 and mc <= 70:
-            point = point + (Referencepoint / (mc * 4.5))
+            point = point + (Referencepoint) / (mc * (4.5))
         elif mc >= 70 and mc <= 100:
-            point = point + (Referencepoint / (mc * 6.0))
+            point = point + (Referencepoint) / (mc * (6.0))
         elif mc >= 100 and mc <= 150:
-            point = point + (Referencepoint / (mc * 5.0))        
+            point = point + (Referencepoint) / (mc * (7.0))        
         else:
-            point = point + (Referencepoint / (mc * (mc / 9)))
-        if int(Timing) < int(HardestC): #Если тайминг сложнее старого, то он записывается
-            HardestC = Timing
+            point = point + (Referencepoint / (mc * ((mc / 9))))
+        if int(Timing[0]) < int(HardestC): #Если тайминг сложнее старого, то он записывается
+            HardestC = Timing[0]
         
-        if int(Timing) > int(FreeC): #Если тайминг легче старого, то он записывается
-            FreeC = Timing
-        
+        if int(Timing[0]) > int(FreeC): #Если тайминг легче старого, то он записывается
+            FreeC = Timing[0]
         Сounter = Сounter + 1 #сетчик таймингов
-        Mior = Mior + int(Timing)
-    result = point / Compression
+        Mior = Mior + int(Timing[0])
+        if ERRORFRAMETIM == 1 and v6mode == 1:
+            print("lvlcal:У вас кадры и тайминги не совпадают>"+ str(Сounter-1))
+            return 0
+    if v6mode == 1:
+        result = point / v6com
+        if Fmc > 29999:
+            typelvl = "demon"
+        else:
+            typelvl = "challenge"
+    else:
+        result = point / Compression
     Mior = Mior / Сounter #Сумма таймингов на сумму кликов
+    if seting == "10":
+        return round((Fmc - oldframeting[1]),2)
     if seting != "2":
-        print("\nВерсия ALTA v5.13 от Prosto_Maksim")
-        print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
+        if v6mode == 1:
+            print("\nВерсия "+altaver("color")+" от Prosto_Maksim")
+            print("Тайминги уровня:" + Timingscolor + "\nВсего таймингов:" + str(Сounter))
+            print("Тип уровня - " + typelvl)
+
+        else:
+            print("\nВерсия "+altaver("color")+" (legacy mode) от Prosto_Maksim")
+            print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
+
         print("Фпс измерения:" + str(fps) + "\n")
         print("Самый сложный тайминг:" + str(HardestC)+"кадр")
-        print("Средний тайминг:" + str(Mior)+"кадр")
+        print("Средний тайминг:" + str(round(Mior,2))+"кадр")
         print("Самый простой тайминг:" + str(FreeC)+"кадр\n")
     if seting == "1": #Вывод баланса
-        balanceKZ(fps,Timings,"1")
+        balanceKZ(fps,legacytranslat(Timings),"1")
     if seting != "2":
         print("pp:" + str(round(result, 1)) + "\n")
     return str(round(result, 1))
 
 clear("0")
-print("Загрузка...   3/27")
+print("Загрузка[\]   3/29")
 
+def legacytranslat(Timings): #для кусков кода которые не понимают все новое)
+    LegacyTimings = ''
+    fist = 0
+    for timing in Timings.split(";"): #делить по таймингам
+        if timing[0] == "?": #удаляет ?
+            timing = timing[1:]
+        if fist == 1: #чтобы в начале не было ;
+            LegacyTimings = LegacyTimings + ";"
+        fist = 1
+        LegacyTimings = LegacyTimings + timing.split("-")[0] #убитает кадры и записывает
+    return LegacyTimings
 def debuglvlcal(): #создано чисто для проверки(не для обычного юзера)
     data = ''
     frame = 1    
@@ -169,9 +244,9 @@ def debuglvlcal(): #создано чисто для проверки(не дл�
         frame = frame + 1
 
 clear("0")
-print("Загрузка...   4/27")
+print("Загрузка[|]   4/29")
 
-def settingfiles(mode, typE, Number): #Отвечает за сохранения настроек в файл. ГОВНО КОД потом перепишу!
+def settingfiles(mode, typE, Number): #Отвечает за сохранения настроек в файл. ГОВНО КОД потом перепишу! (это дожило до v6.0 ЛОЛ)
     
     def reset(fist): #сброс файла
         if fist != "1": #ругатся если это был не первый запуск)
@@ -262,7 +337,7 @@ def settingfiles(mode, typE, Number): #Отвечает за сохранени�
                   Filesetting.write("lvlbanace:" + str(Number) + "\n")
                   Filesetting.close()  
 clear("0")
-print("Загрузка.     5/27")
+print("Загрузка[/]   5/29")
 
 def conv(Timings): #Ну... просто ; среть и все)
     coun = len(str(Timings))
@@ -276,13 +351,13 @@ def conv(Timings): #Ну... просто ; среть и все)
         coun = coun - 1
 
 clear("0")
-print("Загрузка..    6/27")
+print("Загрузка[-]   6/29")
 
 def Victors(lvl):
     try:
         files = os.listdir("Base") #В скобаках какой папке база.
     except FileNotFoundError:
-        print("Датабаза не найдена")
+        print("victors:Датабаза не найдена")
         return 0
     all = []
     altapl = list(filter(lambda x: x.endswith('.altapl'), files)) #фильтр форматов(altapl - для игроков юзается)
@@ -302,7 +377,7 @@ def Victors(lvl):
     return all
 
 clear("0")
-print("Загрузка...   7/27")
+print("Загрузка[\]   7/29")
 
 standard = settingfiles("read","fps",1) #фпс по умолчанию
 autoclear = settingfiles("read", "clear", 1) #какой режим чистки
@@ -310,7 +385,7 @@ KZbalance = settingfiles("read", "lvlbanace", 1)
 TPS = int(standard) #Переносится стандартный фпс в переменную где с ним будут работать.
 
 clear("0")
-print("Загрузка.     8/27")
+print("Загрузка[|]    8/29")
 
 def addlvl():
 
@@ -330,7 +405,7 @@ def addlvl():
         pp = lvlcal(com5,com4,"2")
         if pp == 0:
             return 0
-        fan = balanceKZ(int(com5),com4,"2")
+        fan = balanceKZ(int(com5),legacytranslat(com4),"2")
     except KeyboardInterrupt:
         sys.exit()
     
@@ -338,7 +413,7 @@ def addlvl():
     try:
         data = open("Base/lvldatabase.altalvl", 'r')
     except FileNotFoundError:
-        print("Датабаза не найдена")
+        print("add.lvl:Датабаза не найдена")
         return 0
     while scan == 0:
         lvlscan = data.readline().rstrip('\n')
@@ -364,14 +439,14 @@ def addlvl():
     data.close()
 
 clear("0")
-print("Загрузка..    9/27")
+print("Загрузка[/]   9/29")
 
 def infolvl(lvl,setmode):
     good = 0
     try:
         data = open("Base/lvldatabase.altalvl", 'r')
     except FileNotFoundError:
-        print("Датабаза не найдена")
+        print("info.lvl:Датабаза не найдена")
         return 0
     scan = 0
     while scan == 0:
@@ -392,12 +467,12 @@ def infolvl(lvl,setmode):
     
     if good == 0:
         if setmode == "1":
-            print("лвл не Найден в базе")
+            print("info.lvl:лвл не Найден в базе")
         return 0
     data.close()
 
 clear("0")
-print("Загрузка...   10/27")
+print("Загрузка[-]   10/29")
 
 def addvict(Player,lvld): #Дает добавить лвл игроку
     try:
@@ -413,13 +488,13 @@ def addvict(Player,lvld): #Дает добавить лвл игроку
     try:
         data = open("Base/" + Player, 'r')
     except FileNotFoundError:
-        print("такого игрока нет в датабазе или самой датабазы")
+        print("add.vict:такого игрока нет в датабазе или самой датабазы")
         return 0
     name = data.readline()
     lvl = data.readlines()
     for scan in lvl:
         if scan.split(":")[0] == lvld:
-            print("У него уже он пройден")
+            print("add.vict:У него уже он пройден")
             return 0
     hardest = 0
     Comlit = 1
@@ -457,7 +532,7 @@ def addvict(Player,lvld): #Дает добавить лвл игроку
     data.close()
 
 clear("0")
-print("Загрузка.     11/27")
+print("Загрузка[\]   11/29")
 
 def createdb():
     files = os.listdir() #Проверка на наличие уже датабазы
@@ -480,13 +555,13 @@ def createdb():
     print("Датабаза создана!")
 
 clear("0")
-print("Загрузка..    12/27")
+print("Загрузка[|]    12/29")
 
 def addpla(pla):
     files = os.listdir("Base/")
     for scan in files: #не дает повторно создать профиль.
         if pla == scan.split(".")[0]:
-            print("Игрок уже есть в базе")
+            print("add.pla:Игрок уже есть в базе")
             return 0
     
     new = open("Base/"+str(pla)+".altapl", 'w') #если все-таки его нет, то это-
@@ -496,7 +571,7 @@ def addpla(pla):
     print("Игрок добавлен")
 
 clear("0")
-print("Загрузка...   13/27")
+print("Загрузка[/]   13/29")
 
 def loaddb():
     files = os.listdir() #Проверка на наличие уже датабазы
@@ -527,7 +602,7 @@ def loaddb():
     print("Датабаза загружена!")
 
 clear("0")
-print("Загрузка...   14/27")
+print("Загрузка[-]   14/29")
 
 def savedb():
     try:
@@ -539,7 +614,7 @@ def savedb():
     try:
         zip.write("Base") #Создает папку в нем
     except FileNotFoundError:
-        print("Датабаза не найдена")
+        print("save.db:Датабаза не найдена")
         return 0
     files = os.listdir("Base/") #Смотрит что у вас в базе
     
@@ -552,14 +627,14 @@ def savedb():
     print("Датабаза сохранена!")
 
 clear("0")
-print("Загрузка.     15/27")
+print("Загрузка[\]   15/29")
 
 def infopla(pla):
     if pla == "0":
         try:
             files = os.listdir("Base/") #ищет в базе игроков
         except FileNotFoundError:
-            print("Датабаза не найдена")
+            print("info.pla:Датабаза не найдена")
             return 0
         print("Все игроки в базе")
         files = filter(lambda x: x.endswith('.altapl'), files)
@@ -624,7 +699,7 @@ def plalvlcomm(requirements): #Для безопастности вынес эт
                 top(alllvl,pplvl)#Делает топ
 
 clear("0")
-print("Загрузка..     16/27")
+print("Загрузка[|]    16/29")
 
 def tophelper(plaer):
         
@@ -651,9 +726,9 @@ def tophelper(plaer):
                 pparr.append(pp)
         return pparr
 clear("0")
-print("Загрузка...    17/27")
+print("Загрузка[/]   17/29")
 
-def balanceKZ(fps,sequence,lvlcalmode): #Не мое, так-что писать ничего не буду)
+def balanceKZ(fps,sequence,lvlcalmode): #Не мое, так-что коментарие писать ничего не буду) (И ваще это морально устарело)
     score = 0
     points = 0
     list = []
@@ -684,12 +759,12 @@ def balanceKZ(fps,sequence,lvlcalmode): #Не мое, так-что писать
     return str(round(points,2))+'/10'
 
 clear("0")
-print("Загрузка.      18/27")
+print("Загрузка[-]   18/29")
 
 def scanpplvl(lvl):
     pp = lvlcal(scanerpla(lvl,"4"),scanerpla(lvl,"3"),"2")
     lvlcha(lvl,"5", pp)
-    lvlcha(lvl,"4", str(balanceKZ(int(scanerpla(lvl,"4")),str(scanerpla(lvl,"3")),"2")))
+    lvlcha(lvl,"4", str(balanceKZ(int(scanerpla(lvl,"4")),legacytranslat(str(scanerpla(lvl,"3"))),"2")))
 
     allvict = Victors(lvl)
     for plar in allvict:
@@ -697,7 +772,7 @@ def scanpplvl(lvl):
         addvict(plar,lvl)
 
 clear("0")
-print("Загрузка..     19/27")
+print("Загрузка[\]   19/29")
 
 def deleteplalvl(pla, lvl): #Дает удалить пройденный лвл у игрока
     pla = pla + ".altapl"
@@ -705,7 +780,7 @@ def deleteplalvl(pla, lvl): #Дает удалить пройденный лвл
     try:
         data = open("Base/" + pla, 'r')
     except FileNotFoundError:
-        print("такого игрока нет в датабазе или самой датабазы")
+        print("del.vict:такого игрока нет в датабазе или самой датабазы")
         return 0
     
     name = data.readline()
@@ -721,7 +796,7 @@ def deleteplalvl(pla, lvl): #Дает удалить пройденный лвл
                 antiass = 1
             coutler = coutler + 1
             if scan == "0" and antiass == 0:
-                print("Этого лвла у него нет")
+                print("del.vict:Этого лвла у него нет")
                 return 0
     
     ok = ok / 10
@@ -736,7 +811,7 @@ def deleteplalvl(pla, lvl): #Дает удалить пройденный лвл
         delet = delet + 1
 
 clear("0")
-print("Загрузка...    20/27")
+print("Загрузка[|]    20/29")
 
 def lvlcha(lvl,type,nyper): #дает менять данные в базе о лвле
     
@@ -766,7 +841,7 @@ def lvlcha(lvl,type,nyper): #дает менять данные в базе о �
     data.close()
 
 clear("0")
-print("Загрузка.      21/27")
+print("Загрузка[/]   21/29")
 
 def scanerpla(lvl,type):
     
@@ -785,7 +860,7 @@ def scanerpla(lvl,type):
         cout = cout + 1
 
 clear("0")
-print("Загрузка..     22/27")
+print("Загрузка[-]   22/29")
 
 def top(data,pp): #Делает топ
     datapp = ([])
@@ -804,7 +879,7 @@ def top(data,pp): #Делает топ
         cont = cont + 1
 
 clear("0")
-print("Загрузка...    23/27")
+print("Загрузка[\]   23/29")
 
 def scanallvl(): #Ищет все лвла
     
@@ -824,7 +899,7 @@ def scanallvl(): #Ищет все лвла
     return alllvl
 
 clear("0")
-print("Загрузка...    24/27")
+print("Загрузка[|]   24/29")
 
 def freme(fps,Timings): #считает не точно но пойдет)
     Сounter = 0
@@ -840,17 +915,17 @@ def freme(fps,Timings): #считает не точно но пойдет)
         
         Timings = str(Timings[0]) #чистить название лвл от -l 
         if len(Timings) == 0:
-            print("Ты точно ввел уровень?")
+            print("frep:Ты точно ввел уровень?")
             return 0
         Lvl = Timings.rstrip(Timings[-1])
         
         oldTimings = Timings
         Timings = scanerpla(Lvl,"3") #Ищет тайминги в датабазе
         if Timings == 0:
-            print("Уровень - " + oldTimings + "<не найден>")
+            print("frep:Уровень - " + oldTimings + "<не найден>")
             return 0    
     elif Timings:
-        print("Ты точно ввел нужное?")
+        print("frep:Ты точно ввел нужное?")
         return 0
     for T in Timings.split(";"):
         Сounter = Сounter + 1
@@ -878,14 +953,14 @@ def freme(fps,Timings): #считает не точно но пойдет)
                 Counter3fp = Counter3fp + 1 #попытка эмулировать разные кадры))
                 if Counter3fp >= 4:
                     Counter3fp = 0                
-    print("\nВерсия ALTA v5.13 от Prosto_Maksim")
+    print("\nВерсия "+altaver("color")+" от Prosto_Maksim")
     print("Тайминги уровня:" + str(Timings) + "\nВсего таймингов:" + str(Сounter))
     print("Фпс измерения:" + str(fps) + "\n")
     print(str(fps) +" fps фреймы:"+ str(Fremere[0]))
     print(str(int(fps)/2) +" fps фреймы:"+ str(Fremere[1])+" +-")
     print(str(int(fps)/4) +" fps фреймы:"+ str(Fremere[2])+" +-")
 clear("0")
-print("Загрузка...    24/27")
+print("Загрузка[/]   24/29")
 def verdbtest(): #Сигналка на случай неправильной дб
     types = ["Author(S):","Verification:","Timings:","FPS:","balance:","PP:","idlvl:","end"]
     try:
@@ -916,7 +991,7 @@ def verdbtest(): #Сигналка на случай неправильной д
         count = count + 1
 verdbtest()
 clear("0")
-print("Загрузка...    25/27")
+print("Загрузка[/]    25/29")
 
 def convdb():
     data = open("Base/lvldatabase.altalvl", 'r')
@@ -948,52 +1023,117 @@ def convdb():
         data.close()
         return 7
 clear("0")
-print("Загрузка...    26/27")
+print("Загрузка[-]    26/29")
 
-def vido(fps,tim):
-    localfrep = [0,0,0,0,0,0,0]
+def vido(fps,tim): #делает по datapp счетчик
+    localfrep = [0,0,0,0,0,0,0] #cчетчик фп
     if lvlcal(fps,tim,'2') == 0:
         return 0
-    file = input("файл .kdenlive>").replace('"', '')
+    clickframe = [9999999,0,0,0,0,0,0] #сдвигаватель того счетчика
+    for click in tim.split(";"): #ищет самый сложный клик
+        click = click.split("-")[0]
+        if click[0] == "?": #убирает ?
+            click = click[1:]
+        if clickframe[0] >= int(click):
+            clickframe[0] = int(click)
+    count = 0
+    while count != (len(clickframe)-1): #заполняет наш свигаватель
+        clickframe[count + 1] = clickframe[0] + count+1
+        count = count + 1
+    file = input("файл .kdenlive>").replace('"', '') #просить файл от монтажки с сразу записывает в переменную
     files = open(file,'r')
     filesall = files.read()
-    file1 = filesall.split('pp</property>')
+    file1 = filesall.split('pp</property>') #деление по datapp
     file2 = []
     for fil in file1:
-        file2.append(fil.split('<property name="argument">data'))
+        file2.append(fil.split('<property name="argument">data')) #конец деления
     timhere = ''
-    lendata = (len(tim.split(";")) - len(file2)) + 2
+    lendata = (len(tim.split(";")) - len(file2)) + 2 #сравнение между видео и фактическими таймингами
     if lendata != 0:
-        print("У вас разница между таймингами и видео - " + str(lendata))
+        print("helper.vido:У вас разница между таймингами и видео - " + str(lendata))
         return 0
     anti = 0
     count = 0
-    files = open(file + 'alta', 'w')
+    files = open(file + 'alta', 'w') #создание видео
     files.write(file2[count][0])
-    files.write('<property name="argument">')
-    files.write('frame-0\n1-0\n2-0\n3-0\n4-0\n5-0\n6-0\n7-0\n0.0pp</property>')
+    files.write('<property name="argument">') #следущая строка создает базовый шаблон для первых секунд из 7 самых сложных кадров
+    files.write('frame-0 '  +altaver('BW') +" "+ str(fps) + 'fps\n'+ str(clickframe[0]) + '-0\n'+ str(clickframe[1]) + '-0\n'+ str(clickframe[2]) + '-0\n'+ str(clickframe[3]) + '-0\n'+ str(clickframe[4]) + '-0\n'+ str(clickframe[5]) + '-0\n'+ str(clickframe[6]) + '-0\n0.0pp</property>')
     count = count + 1
-    for stas in tim.split(';'):
-        if anti != 0:
+    v6 = 0
+    for stas in tim.split(';'): #заполнение шаблона
+        if len(stas.split("-")) == 2:
+            v6 = 1
+        if anti != 0: #по шагам добавляет тайминги
             timhere = timhere + ";" + stas
         else:
             timhere = stas
             anti = 1
-        if int(stas) <= 7:
-            localfrep[int(stas)-1] = localfrep[int(stas)-1] + 1
-        autotim = lvlcal(fps,timhere,'2')
-        files.write(file2[count][0])
+        stas = stas.split("-")[0]
+        if stas[0] == "?": #убирает ?
+            stas = stas[1:]
+        stas = int(stas) - clickframe[0] #свдигает localfrep по clickframe 
+        
+        if stas <= 6: #если после сдвига оно все еще в пределах 6
+            localfrep[int(stas)] = localfrep[int(stas)] + 1 #то оно записывает результат
+        stas = int(stas)+clickframe[0]#убирает сдвиг
+        autotim = lvlcal(fps,timhere,'2')#измерение пп
+        files.write(file2[count][0])#запись одного блока дааных
         files.write('<property name="argument">')
-        files.write('frame-' + str(stas) + "\n1-"+ str(localfrep[0]) + "\n2-"+ str(localfrep[1]) + "\n3-"+ str(localfrep[2]) + "\n4-"+ str(localfrep[3]) + "\n5-"+ str(localfrep[4]) + "\n6-"+ str(localfrep[5]) +"\n7-"+ str(localfrep[6]) +"\n" + str(autotim) + 'pp</property>')
-        count = count + 1
-    files.write(file2[count][0])
+        if v6 == 1:
+            if len(str(stas)) == 1:
+                files.write('frame-' + str(stas) +"   interval(ms)-"+ str(lvlcal(fps,timhere,"10")) +"\n"+str(clickframe[0])+"-"+ str(localfrep[0]) + "\n"+str(clickframe[1])+"-"+ str(localfrep[1]) + "\n"+str(clickframe[2])+"-"+ str(localfrep[2]) + "\n"+str(clickframe[3])+"-"+ str(localfrep[3]) + "\n"+str(clickframe[4])+"-"+ str(localfrep[4]) + "\n"+str(clickframe[5])+"-"+ str(localfrep[5]) +"\n"+str(clickframe[6])+"-"+ str(localfrep[6]) +"\n" + str(autotim) + 'pp</property>')
+            else:
+                files.write('frame-' + str(stas) +" interval(ms)-"+ str(lvlcal(fps,timhere,"10")) +"\n"+str(clickframe[0])+"-"+ str(localfrep[0]) + "\n"+str(clickframe[1])+"-"+ str(localfrep[1]) + "\n"+str(clickframe[2])+"-"+ str(localfrep[2]) + "\n"+str(clickframe[3])+"-"+ str(localfrep[3]) + "\n"+str(clickframe[4])+"-"+ str(localfrep[4]) + "\n"+str(clickframe[5])+"-"+ str(localfrep[5]) +"\n"+str(clickframe[6])+"-"+ str(localfrep[6]) +"\n" + str(autotim) + 'pp</property>')
+        else:
+            if len(str(stas)) == 1:
+                files.write('frame-' + str(stas) +"   Legacy mode\n"+str(clickframe[0])+"-"+ str(localfrep[0]) + "\n"+str(clickframe[1])+"-"+ str(localfrep[1]) + "\n"+str(clickframe[2])+"-"+ str(localfrep[2]) + "\n"+str(clickframe[3])+"-"+ str(localfrep[3]) + "\n"+str(clickframe[4])+"-"+ str(localfrep[4]) + "\n"+str(clickframe[5])+"-"+ str(localfrep[5]) +"\n"+str(clickframe[6])+"-"+ str(localfrep[6]) +"\n" + str(autotim) + 'pp</property>')
+            else:
+                files.write('frame-' + str(stas) +" Legacy mode\n"+str(clickframe[0])+"-"+ str(localfrep[0]) + "\n"+str(clickframe[1])+"-"+ str(localfrep[1]) + "\n"+str(clickframe[2])+"-"+ str(localfrep[2]) + "\n"+str(clickframe[3])+"-"+ str(localfrep[3]) + "\n"+str(clickframe[4])+"-"+ str(localfrep[4]) + "\n"+str(clickframe[5])+"-"+ str(localfrep[5]) +"\n"+str(clickframe[6])+"-"+ str(localfrep[6]) +"\n" + str(autotim) + 'pp</property>')
+        count = count + 1 #счетчик для записи блоков
+    files.write(file2[count][0])#дописывает конец
     files.close()
     print("пп добавлены в файл вашего видео!")
 clear("0")
-print("Загрузка...    27/27")
+print("Загрузка[\]    27/29")
+
+def altaver(color): # версия
+    if color != "BW":
+        return f'{Fore.CYAN}ALTA v6.0{Fore.RESET}'
+    else:
+        return 'ALTA v6.0'
 clear("0")
-print("Версия ALTA v5.13 от Prosto_Maksim")
+print("Загрузка...    28/29")
+def clinker(timing,frame): #ну из название понятно что оно делает
+    linker = ''
+    if len(frame.split("-")) == len(timing.split(";")): #проверяет что у тебя на ровность.
+        thisjusttest = 1#остаток дебага
+    else: #если они отличаются то-
+        print("clinker:У тебя разное количество таймингов и промежутков")
+        return 0
+    stiming = timing.split(';') #дальше оно делить кадры и тайминги
+    sframe = frame.split('-')
+    count = 0
+    for g in stiming: #сборка
+        if count != 0:#чтобы первым не было ;
+            linker = linker + ";"
+        linker = linker + str(stiming[count]) +'-'+ str(sframe[count])
+        count = count + 1
+    return linker    
+clear("0")
+print("Загрузка[|]   28/29")
+def stabily(fps,timing,oldtimings):
+    if oldtimings[1] != 0:
+        Fmc = 1000 / (int(fps) / int(timing))
+        reul = (round(float(Fmc),5) - round(oldtimings[0],5)) % 2
+    else:
+        return 0
+    return reul
+clear("0")
+print("Загрузка...    29/29")
+clear("0")
+print("Версия " + altaver("color") + " от Prosto_Maksim")
 print("Для помощи напишите help")
+print("Добро пожаловать в новую эру!")
 
 while 1 == 1:
     
@@ -1031,7 +1171,7 @@ while 1 == 1:
                     print("  fps.set - фпс который будет при запуске")
                     print("  Placal - измерение сумарного pp игрока по файлу")
                     print("  lvlcal - измерение пп лвла")
-                    print("  balcal - измерение баланса лвла(от SpaceKZ)")
+                    print("  balcal - измерение баланса лвла(от SpaceKZ)(legacy)")
                 case "2":
                     print(" Для датабазы:")
                     print("  add.pla - добавить игрока в датабазу")
@@ -1062,6 +1202,7 @@ while 1 == 1:
                     print("  dev - список всех кто принимал участие и так-далее")
                     print("  frep - примерное измерение фрейм перфектов")
                     print('  helper.vido - автомат ставить пп на монтаже!')
+                    print("  clinker - соединение таймингов и промежутков")
                 case "fps":
                     print("Команда FPS - для изменения фпса расчета пп")
                     print("  Еще при пропуска фпса в chatim будет фпс который вы указали в fps")
@@ -1082,14 +1223,16 @@ while 1 == 1:
                     print("  The cube challenge 1:500пп 85% == 500пп*0.85%=425пп(425 сколько дали ему)")
                 case "lvlcal":
                   print("Комадна lvlcal для измерения сложности лвла по пп")
-                  print("   Для измерения нужно иметь гд с FrameStep и фпс байпасс(физикс байпасс в 2.2)")
+                  print("   Для измерения нужно иметь гд с FrameStep и фпс байпасс(физикс байпасс в 2.2)\nА для промежутков еще счетчик кадров самого уровня")
                   print("   Ставим фпс(в gd и в alta(комадна fps)) на котором будуте мерить(тем больше фпс тем точнее(но дольше будет замер))")
-                  print("   Дальше начинаем замерать сколько каждый тайминг имеет кадров для пролета и записывать его через ;")
-                  print("   После замеров у вас будет примерно вот-это 4;7;3;6;2;10;1;2")
+                  print("   Дальше начинаем замерать сколько каждый тайминг имеет кадров для пролета и Место где он был(промежуток)\n записывать его через тайминг-промежуток;(и так далее)")
+                  print("   После замеров у вас будет примерно вот-это 4-300;7-400;3-450;6-470;2-700;10-730;1-750;2-800")
                   print("   После жмем Enter и получаем результат")
+                  print("   Если замеры были без промежутков то будет легаси режим(2;2;5;7;2)")
+                  print("   Если тайминг такой например - невидимый вейв(тоесь слепой 100%) то перед таймингом писать ?")
                 case "balcal":
-                    print("Комадна balcal для измерения баланса лвла")
-                    print("  Измерается так-же как и lvlcal")
+                    print("Комадна balcal(legacy) для измерения баланса лвла")
+                    print("  Измерается так-же как и lvlcal в lagacy режиме")
                     print("-  -  -  -  -  -")
                     print(" Для измерения нужно иметь гд с FrameStep и фпс байпасс(физикс байпасс в 2.2)")
                     print(" Ставим фпс(в gd и в alta(комадна fps)) на котором будуте мерить")
@@ -1099,7 +1242,7 @@ while 1 == 1:
                     print("-  -  -  -  -  -")
                 case "frep":
                     print("Комадна frep для измерения количества фреймов в лвле")
-                    print("  Измерается так-же как и lvlcal")
+                    print("  Измерается так-же как и lvlcal в lagacy режиме")
                     print("-  -  -  -  -  -")
                     print(" Для измерения нужно иметь гд с FrameStep и фпс байпасс(физикс байпасс в 2.2)")
                     print(" Ставим фпс(в gd и в alta(комадна fps)) на котором будуте мерить")
@@ -1197,6 +1340,12 @@ while 1 == 1:
                     print(" 1.тайминги уровня")
                     print(" 2.уже нарезаный лвл в kdenlive!!!(где доложны быть надпись про - 'datapp' - доложно быть написано)")
                     print(" если все есть то просто водим тайминги и кидаем файл от монтажки")
+                case "clinker":
+                    print("clinker - Если у вас есть отдельно тайминги и промежутки")
+                    print("Она запросить")
+                    print(" 1.тайминги>(Через ;)")
+                    print(" 2.промежутки>(Через -)")
+                    print(" и после этого она их соединить")
         case "clear":
             clear("1")
         
@@ -1212,7 +1361,7 @@ while 1 == 1:
                 else: #если с ней что-то еще написано
                     TPS = int(requirements)   #Выбирает последную из всего массива и считает как за выбранный фпс
             except ValueError: #защита от идиота
-                print("Ты точно ввел фпс?")
+                print("fps:Ты точно ввел фпс?")
             except KeyboardInterrupt:
                 sys.exit()
             if TPS == 0: #cброс
@@ -1229,7 +1378,7 @@ while 1 == 1:
                     standard = int(requirements)
                     settingfiles("white","fps", int(requirements))  #Выбирает последную из всего массива и считает как за выбранный фпс
             except ValueError: #защита от идиота
-                print("Ты точно ввел фпс?")
+                print("fps.set:Ты точно ввел фпс?")
                 standard = settingfiles("read","fps",1)
             except KeyboardInterrupt:
                 sys.exit()
@@ -1276,7 +1425,7 @@ while 1 == 1:
                 else: #если с ней что-то еще написано
                     conv(requirements)
             except ValueError: #защита от идиота
-                print("Ты точно ввел нужное?")
+                print("conv:Ты точно ввел нужное?")
             except KeyboardInterrupt:
                 sys.exit()
         
@@ -1338,7 +1487,7 @@ while 1 == 1:
                 else: #если с ней что-то еще написано
                     addpla(requirements)
             except ValueError: #защита от идиота
-                print("Ты точно ввел нужное?")
+                print("add.pla:Ты точно ввел нужное?")
             except KeyboardInterrupt:
                 sys.exit()
         
@@ -1349,7 +1498,7 @@ while 1 == 1:
                 else: #если с ней что-то еще написано                    
                     infopla(requirements)
             except ValueError: #защита от идиота
-                print("Ты точно ввел нужное?")
+                print("info.pla:Ты точно ввел нужное?")
             except KeyboardInterrupt:
                 sys.exit()
         
@@ -1363,22 +1512,22 @@ while 1 == 1:
             try:
                 if auto == 6: #если только команда
                     com = input(">>")
-                    balanceKZ(TPS,com,"0")
+                    balanceKZ(TPS,legacytranslat(com),"0")
                 else: #если с ней что-то еще написано
-                    balanceKZ(TPS,requirements,"0")
+                    balanceKZ(TPS,legacytranslat(requirements),"0")
             except ValueError: #защита от идиота
-                print("Ты точно ввел нужное?")
+                print("balcal:Ты точно ввел нужное?")
             except KeyboardInterrupt:
                 sys.exit()
         case "frep":
             try:
                 if auto == 4: #если только команда
                     com = input(">>")
-                    freme(TPS,com)
+                    freme(TPS,legacytranslat(com))
                 else: #если с ней что-то еще написано
-                    freme(TPS,requirements)
+                    freme(TPS,legacytranslat(requirements))
             except ValueError: #защита от идиота
-                print("Ты точно ввел нужное?")
+                print("frep:Ты точно ввел нужное?")
             except KeyboardInterrupt:
                 sys.exit()        
         case "del.vict":
@@ -1397,7 +1546,7 @@ while 1 == 1:
                 lvlcha(com,"3",com3)
                 scanpplvl(com)
             except FileNotFoundError:
-                print("Датабаза не найдена")
+                print("chatim:Датабаза не найдена")
         
         case "chaver":
             com = input("Какой лвл?>").lower()
@@ -1405,12 +1554,12 @@ while 1 == 1:
             try:
                 lvlcha(com, "1", com3)
             except FileNotFoundError:
-             print("Датабаза не найдена")   
+             print("chaver:Датабаза не найдена")   
         case "rebal":
             try:
                 com = scanallvl()
             except FileNotFoundError:
-                    print("Датабаза не найдена")            
+                    print("rebal:Датабаза не найдена")            
             
             for lvl in com:
                 if lvl != "0":
@@ -1424,16 +1573,16 @@ while 1 == 1:
             try:
                 lvlcha(com, "6", com3)
             except FileNotFoundError:
-             print("Датабаза не найдена")   
+             print("chaid:Датабаза не найдена")   
         case "conv.db":
             convdb()        
         case "top":
             try:
                 plalvlcomm(requirements)
             except FileNotFoundError:
-                print("Датабаза не найдена")
+                print("top:Датабаза не найдена")
         case "dev":
-            print("ALTA v5.13 2023-2026")
+            print(altaver("color") + " 2023-2026")
             print(" Главный - Prosto_Maksim - https://youtube.com/@Prosto_Maksim\n")
             print(" Спасибо - SpaceKZ за идею и за (balcal) - https://www.youtube.com/@spaceKZ1\n")
             print(" Лицензия - GNU GPL v3 - https://www.gnu.org/licenses/quick-guide-gplv3.ru.html")
@@ -1445,3 +1594,8 @@ while 1 == 1:
                 vido(TPS,com)
             else:
                 vido(TPS,requirements)
+        case "clinker":
+            com = input("Тайминги>")
+            com3 = input("промежутки>")
+            print("Готово!")
+            print(clinker(com,com3))
