@@ -5,7 +5,7 @@
 
 
 
-Математический расчет сложности для Geometry Dash
+**Математический расчет сложности для Geometry Dash**
 
 C Osu!(https://github.com/ppy) подобным методом
 
@@ -46,7 +46,10 @@ C Osu!(https://github.com/ppy) подобным методом
 
 .
 
-Для сборки программы можно юзать -
+**Для сборки**
+>1.pip instal colorama
+
+>2.выбор между PyInstaller или nuitka
 
 1.Через PyInstaller
 > Устоновка PyInstaller
