@@ -186,7 +186,7 @@ def lvlcal(fps,Timings,seting):
         elif mc >=20 and mc <= 30: 
             point = point + (Referencepoint + (ReferencepointFRAME * Xframe)) / (mc * (2))
         elif mc >= 30 and mc <= 60:
-            point = point + (Referencepoint + ((ReferencepointFRAME/1.3) * Xframe)) / (mc * (3))
+            point = point + (Referencepoint + ((ReferencepointFRAME) * Xframe)) / (mc * (3))
         elif mc >= 60 and mc <= 65:
             point = point + (Referencepoint) / (mc * (3.5))
         elif mc >= 65 and mc <= 70:
@@ -1120,9 +1120,9 @@ print(translation("Загрузка[\]    27/29"))
 
 def altaver(color): # версия
     if color != "BW":
-        return f'{Fore.CYAN}ALTA v6.1{Fore.RESET}'
+        return f'{Fore.CYAN}ALTA v6.1_1{Fore.RESET}'
     else:
-        return 'ALTA v6.1'
+        return 'ALTA v6.1_1'
 clear("0")
 print(translation("Загрузка...    28/29"))
 def clinker(timing,frame): #ну из название понятно что оно делает
