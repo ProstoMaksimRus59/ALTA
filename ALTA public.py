@@ -1149,7 +1149,6 @@ def stabily(fps,timing,oldtimings):
         reul = (round(float(Fmc),5) - round(oldtimings[0],5)) % 2
     else:
         return 0
-    print(reul)
     return reul
 clear("0")
 print(translation("Загрузка...    29/29"))
