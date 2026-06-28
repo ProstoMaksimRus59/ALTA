@@ -26,7 +26,8 @@ def clear(mode): #Ну даже не знаю??? что это делает??? :
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
         print(translation("Версия ")+altaver("color")+translation(" от Prosto_Maksim"))
-print(translation("Загрузка[/]   1/29"))
+clear("0")
+print(translation("Подождите..."))
 
 def Placal(folder,data): #Писал пиздец давно, так-что помню только часть, еще писал на приколе(пришлось переменные другими именами называть :D )
     hardest = 1 #по название доложно понятно быть)
@@ -87,8 +88,6 @@ def Placal(folder,data): #Писал пиздец давно, так-что по
                 if data == "0":
                     print(translation("все!"))
                 file.close()
-clear("0")
-print(translation("Загрузка[-]   2/29"))
 def lvlcal(fps,Timings,seting):
     v6mode = 0
     Referencepoint = 5000
@@ -242,8 +241,6 @@ def lvlcal(fps,Timings,seting):
         print("pp:" + str(round(result, 1)) + "\n")
     return str(round(result, 1))
 
-clear("0")
-print(translation("Загрузка[\]   3/29"))
 
 def legacytranslat(Timings): #для кусков кода которые не понимают все новое)
     LegacyTimings = ''
@@ -265,8 +262,6 @@ def debuglvlcal(): #создано чисто для проверки(не дл�
             return data
         frame = frame + 1
 
-clear("0")
-print(translation("Загрузка[|]   4/29"))
 
 def settingfiles(mode, typE, Number): #Отвечает за сохранения настроек в файл. ГОВНО КОД потом перепишу! (это дожило до v6.0 ЛОЛ)
     
@@ -358,8 +353,6 @@ def settingfiles(mode, typE, Number): #Отвечает за сохранени�
                   Filesetting.write(oldclean + "\n")
                   Filesetting.write("lvlbanace:" + str(Number) + "\n")
                   Filesetting.close()  
-clear("0")
-print(translation("Загрузка[/]   5/29"))
 
 def conv(Timings): #Ну... просто ; среть и все)
     coun = len(str(Timings))
@@ -371,9 +364,6 @@ def conv(Timings): #Ну... просто ; среть и все)
             print(Timing, end="\n")
             print(translation("Готово!"))
         coun = coun - 1
-
-clear("0")
-print(translation("Загрузка[-]   6/29"))
 
 def Victors(lvl):
     try:
@@ -398,16 +388,12 @@ def Victors(lvl):
     print("\n")
     return all
 
-clear("0")
-print(translation("Загрузка[\]   7/29"))
 
 standard = settingfiles("read","fps",1) #фпс по умолчанию
 autoclear = settingfiles("read", "clear", 1) #какой режим чистки
 KZbalance = settingfiles("read", "lvlbanace", 1)
 TPS = int(standard) #Переносится стандартный фпс в переменную где с ним будут работать.
 
-clear("0")
-print(translation("Загрузка[|]    8/29"))
 
 def addlvl():
 
@@ -460,8 +446,6 @@ def addlvl():
     data.write("\nend\n")
     data.close()
 
-clear("0")
-print(translation("Загрузка[/]   9/29"))
 
 def infolvl(lvl,setmode):
     good = 0
@@ -493,8 +477,7 @@ def infolvl(lvl,setmode):
         return 0
     data.close()
 
-clear("0")
-print(translation("Загрузка[-]   10/29"))
+
 
 def addvict(Player,lvld): #Дает добавить лвл игроку
     try:
@@ -553,8 +536,7 @@ def addvict(Player,lvld): #Дает добавить лвл игроку
         hardest = hardest + 1
     data.close()
 
-clear("0")
-print(translation("Загрузка[\]   11/29"))
+
 
 def createdb():
     files = os.listdir() #Проверка на наличие уже датабазы
@@ -576,8 +558,6 @@ def createdb():
     new.close()
     print(translation("Датабаза создана!"))
 
-clear("0")
-print(translation("Загрузка[|]    12/29"))
 
 def addpla(pla):
     files = os.listdir("Base/")
@@ -592,8 +572,7 @@ def addpla(pla):
     new.close()
     print(translation("Игрок добавлен"))
 
-clear("0")
-print(translation("Загрузка[/]   13/29"))
+
 
 def loaddb():
     files = os.listdir() #Проверка на наличие уже датабазы
@@ -623,8 +602,7 @@ def loaddb():
     zip.close()
     print(translation("Датабаза загружена!"))
 
-clear("0")
-print(translation("Загрузка[-]   14/29"))
+
 
 def savedb():
     try:
@@ -648,8 +626,7 @@ def savedb():
     os.remove(name + ".zip") #Удалает уже ненужный ахрив
     print(translation("Датабаза сохранена!"))
 
-clear("0")
-print(translation("Загрузка[\]   15/29"))
+
 
 def infopla(pla):
     if pla == "0":
@@ -720,8 +697,6 @@ def plalvlcomm(requirements): #Для безопастности вынес эт
                     pplvl.append(round(tophelper(plaer)[0])) #Получает пп
                 top(alllvl,pplvl)#Делает топ
 
-clear("0")
-print(translation("Загрузка[|]    16/29"))
 
 def tophelper(plaer):
         
@@ -747,8 +722,7 @@ def tophelper(plaer):
                 Scan = 0
                 pparr.append(pp)
         return pparr
-clear("0")
-print(translation("Загрузка[/]   17/29"))
+
 
 def balanceKZ(fps,sequence,lvlcalmode): #Не мое, так-что коментарие писать ничего не буду) (И ваще это морально устарело)
     score = 0
@@ -780,8 +754,6 @@ def balanceKZ(fps,sequence,lvlcalmode): #Не мое, так-что комент
         print(translation('Баланс:'),str(round(points,2))+'/10')
     return str(round(points,2))+'/10'
 
-clear("0")
-print(translation("Загрузка[-]   18/29"))
 
 def scanpplvl(lvl):
     pp = lvlcal(scanerpla(lvl,"4"),scanerpla(lvl,"3"),"2")
@@ -793,8 +765,7 @@ def scanpplvl(lvl):
         deleteplalvl(plar,lvl)
         addvict(plar,lvl)
 
-clear("0")
-print(translation("Загрузка[\]   19/29"))
+
 
 def deleteplalvl(pla, lvl): #Дает удалить пройденный лвл у игрока
     pla = pla + ".altapl"
@@ -832,9 +803,6 @@ def deleteplalvl(pla, lvl): #Дает удалить пройденный лвл
             data.write(delete)
         delet = delet + 1
 
-clear("0")
-print(translation("Загрузка[|]    20/29"))
-
 def lvlcha(lvl,type,nyper): #дает менять данные в базе о лвле
     
     types = ["Author(S):","Verification:","Timings:","FPS:","balance:","PP:","idlvl:"]
@@ -862,8 +830,7 @@ def lvlcha(lvl,type,nyper): #дает менять данные в базе о �
             cout = 100
     data.close()
 
-clear("0")
-print(translation("Загрузка[/]   21/29"))
+
 
 def scanerpla(lvl,type):
     
@@ -881,8 +848,7 @@ def scanerpla(lvl,type):
             return 0
         cout = cout + 1
 
-clear("0")
-print(translation("Загрузка[-]   22/29"))
+
 
 def top(data,pp): #Делает топ
     datapp = ([])
@@ -900,8 +866,7 @@ def top(data,pp): #Делает топ
             print(" pp:" + str(printtop[1]) + '\n')
         cont = cont + 1
 
-clear("0")
-print(translation("Загрузка[\]   23/29"))
+
 
 def scanallvl(): #Ищет все лвла
     
@@ -920,8 +885,7 @@ def scanallvl(): #Ищет все лвла
         scan = lvls[cout]
     return alllvl
 
-clear("0")
-print(translation("Загрузка[|]   24/29"))
+
 
 def freme(fps,Timings): #считает не точно но пойдет)
     Сounter = 0
@@ -929,11 +893,10 @@ def freme(fps,Timings): #считает не точно но пойдет)
     Counter3fp = 0
     Fremere = [0,0,0]
 
-    Timings = Timings.split('-')
+    Timings = Timings.split('-l')
     if len(Timings) == 1:
         Timings = str(Timings[0])
-
-    elif Timings[1] == "l":  # если -l
+    elif Timings[1] == "":  # если -l
         
         Timings = str(Timings[0]) #чистить название лвл от -l 
         if len(Timings) == 0:
@@ -949,6 +912,7 @@ def freme(fps,Timings): #считает не точно но пойдет)
     elif Timings:
         print(translation("frep:Ты точно ввел нужное?"))
         return 0
+    Timings = legacytranslat(Timings)
     for T in Timings.split(";"):
         Сounter = Сounter + 1
         T = int(T)
@@ -981,8 +945,7 @@ def freme(fps,Timings): #считает не точно но пойдет)
     print(str(fps) +translation(" fps фреймы:")+ str(Fremere[0]))
     print(str(int(fps)/2) +translation(" fps фреймы:")+ str(Fremere[1])+translation(" +-"))
     print(str(int(fps)/4) +translation(" fps фреймы:")+ str(Fremere[2])+translation(" +-"))
-clear("0")
-print(translation("Загрузка[/]   24/29"))
+
 def verdbtest(): #Сигналка на случай неправильной дб
     types = ["Author(S):","Verification:","Timings:","FPS:","balance:","PP:","idlvl:","end"]
     try:
@@ -1012,8 +975,6 @@ def verdbtest(): #Сигналка на случай неправильной д
             return 2
         count = count + 1
 verdbtest()
-clear("0")
-print(translation("Загрузка[/]    25/29"))
 
 def convdb():
     data = open("Base/lvldatabase.altalvl", 'r')
@@ -1044,8 +1005,7 @@ def convdb():
         print(translation("Успешно!"))
         data.close()
         return 7
-clear("0")
-print(translation("Загрузка[-]    26/29"))
+
 
 def vido(fps,tim): #делает по datapp счетчик
     localfrep = [0,0,0,0,0,0,0] #cчетчик фп
@@ -1115,16 +1075,15 @@ def vido(fps,tim): #делает по datapp счетчик
     files.write(file2[count][0])#дописывает конец
     files.close()
     print(translation("пп добавлены в файл вашего видео!"))
-clear("0")
-print(translation("Загрузка[\]    27/29"))
+
 
 def altaver(color): # версия
     if color != "BW":
-        return f'{Fore.CYAN}ALTA v6.1_1{Fore.RESET}'
+        return f'{Fore.CYAN}ALTA v6.2{Fore.RESET}'
     else:
-        return 'ALTA v6.1_1'
-clear("0")
-print(translation("Загрузка...    28/29"))
+        return 'ALTA v6.2'
+
+
 def clinker(timing,frame): #ну из название понятно что оно делает
     linker = ''
     if len(frame.split("-")) == len(timing.split(";")): #проверяет что у тебя на ровность.
@@ -1141,17 +1100,16 @@ def clinker(timing,frame): #ну из название понятно что о�
         linker = linker + str(stiming[count]) +'-'+ str(sframe[count])
         count = count + 1
     return linker    
-clear("0")
-print(translation("Загрузка[|]   28/29"))
+
 def stabily(fps,timing,oldtimings):
     if oldtimings[1] != 0:
         Fmc = 1000 / (int(fps) / int(timing))
         reul = (round(float(Fmc),5) - round(oldtimings[0],5)) % 2
+        if reul < 0:
+            reul = 0
     else:
         return 0
     return reul
-clear("0")
-print(translation("Загрузка...    29/29"))
 clear("0")
 print(translation("Версия ") + altaver("color") + translation(" от Prosto_Maksim"))
 print(translation("Для помощи напишите help"))
@@ -1327,7 +1285,6 @@ while 1 == 1:
                     print(translation("Комадна save.db - дает сохранить базу, чтоб потом можно было загружить через load.db"))
                     print(translation(" Для сохранения надо"))
                     print(translation("  1 - Назвать датабазу"))
-                    print(translation("  2 - Назвать датабазу"))
                     print(translation("  3 - Путь куда ее сохранить(можно кинуть в окно нужную папку)"))
                 case "create.db":
                     print(translation("Команда create.db - создает датабазу(если ее нет) или очисить(если она то этого была)"))
@@ -1544,9 +1501,9 @@ while 1 == 1:
             try:
                 if auto == 4: #если только команда
                     com = input(">>")
-                    freme(TPS,legacytranslat(com))
+                    freme(TPS,com)
                 else: #если с ней что-то еще написано
-                    freme(TPS,legacytranslat(requirements))
+                    freme(TPS,requirements)
             except ValueError: #защита от идиота
                 print(translation("frep:Ты точно ввел нужное?"))
             except KeyboardInterrupt:
