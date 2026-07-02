@@ -413,6 +413,9 @@ def addlvl():
         pp = lvlcal(com5,com4,"2")
         if pp == 0:
             return 0
+        if len(com2.split(":")) != 1 or len(com3.split(":")) != 1 or len(com6.split(":")) != 1:
+            print("add.lvl:Нельзя использовать ':' в авторах, верификаторе или в id")
+            return 0
         fan = balanceKZ(int(com5),legacytranslat(com4),"2")
     except KeyboardInterrupt:
         sys.exit()
@@ -485,11 +488,8 @@ def addvict(Player,lvld): #Дает добавить лвл игроку
     except ValueError:
         print(translation("Точно вел пп?"))
         return 0
-    if pp == 0:
-        return 0
     pp = round(pp)
     Player = Player + ".altapl"
-    
     try:
         data = open("Base/" + Player, 'r')
     except FileNotFoundError:
@@ -505,11 +505,15 @@ def addvict(Player,lvld): #Дает добавить лвл игроку
     Comlit = 1
     
     while Comlit == 1:
-        ll = lvl[hardest].split(":")[-1].rstrip('\n')
-        hardest = hardest + 1
-        if pp > int(ll):
-            New = (hardest - 1)
+        try:
+            ll = lvl[hardest].split(":")[-1].rstrip('\n')
+            hardest = hardest + 1
+            if pp > int(ll):
+                New = (hardest - 1)
+                Comlit = 0
+        except IndexError:
             Comlit = 0
+            New = (hardest - 1)
     data.close()
     data = open("Base/" + Player, 'w')
     data.write(name)
@@ -757,6 +761,8 @@ def balanceKZ(fps,sequence,lvlcalmode): #Не мое, так-что комент
 
 def scanpplvl(lvl):
     pp = lvlcal(scanerpla(lvl,"4"),scanerpla(lvl,"3"),"2")
+    if pp == 0:
+        return 0
     lvlcha(lvl,"5", pp)
     lvlcha(lvl,"4", str(balanceKZ(int(scanerpla(lvl,"4")),legacytranslat(str(scanerpla(lvl,"3"))),"2")))
 
@@ -1079,9 +1085,9 @@ def vido(fps,tim): #делает по datapp счетчик
 
 def altaver(color): # версия
     if color != "BW":
-        return f'{Fore.CYAN}ALTA v6.2{Fore.RESET}'
+        return f'{Fore.CYAN}ALTA v6.3{Fore.RESET}'
     else:
-        return 'ALTA v6.2'
+        return 'ALTA v6.3'
 
 
 def clinker(timing,frame): #ну из название понятно что оно делает
@@ -1519,20 +1525,24 @@ while 1 == 1:
             if com3 == "0" or com3 == "": #Если ничего то обычный фпс
                 com3 = TPS
             com2 = input(translation("Какие тайминги?>"))
-            try:
-                lvlcha(com,"2",com2)
-                lvlcha(com,"3",com3)
-                scanpplvl(com)
-            except FileNotFoundError:
-                print(translation("chatim:Датабаза не найдена"))
+            if lvlcal(com3,com2,"2") != 0:
+                try:
+                    lvlcha(com,"2",com2)
+                    lvlcha(com,"3",com3)
+                    scanpplvl(com)
+                except FileNotFoundError:
+                    print(translation("chatim:Датабаза не найдена"))
         
         case "chaver":
             com = input(translation("Какой лвл?>")).lower()
             com3 = input(translation("Кто верифер?(знак ? чтоб убрать)>"))
-            try:
-                lvlcha(com, "1", com3)
-            except FileNotFoundError:
-             print(translation("chaver:Датабаза не найдена"))   
+            if len(com3.split(":")) == 1:
+                try:
+                    lvlcha(com, "1", com3)
+                except FileNotFoundError:
+                    print(translation("chaver:Датабаза не найдена"))
+            else:
+                print(translation("chaver: Нельзя использовать ':'"))
         case "rebal":
             try:
                 com = scanallvl()
@@ -1548,10 +1558,13 @@ while 1 == 1:
         case "chaid":
             com = input(translation("Какой лвл?>")).lower()
             com3 = input(translation("Новый id( '?' - если приватный)>"))
-            try:
-                lvlcha(com, "6", com3)
-            except FileNotFoundError:
-             print(translation("chaid:Датабаза не найдена"))   
+            if len(com3.split(":")) == 1:
+                try:
+                    lvlcha(com, "6", com3)
+                except FileNotFoundError:
+                    print(translation("chaid:Датабаза не найдена")) 
+            else:
+                print(translation("chatid: Нельзя использовать ':'"))
         case "conv.db":
             convdb()        
         case "top":
