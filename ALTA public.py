@@ -89,6 +89,7 @@ def Placal(folder,data): #Писал пиздец давно, так-что по
                     print(translation("все!"))
                 file.close()
 def lvlcal(fps,Timings,seting):
+    oldfer = 0
     v6mode = 0
     Referencepoint = 5000
     ReferencepointFRAME = 10000
@@ -99,7 +100,7 @@ def lvlcal(fps,Timings,seting):
     FreeC = 0
     point = 0
     Compression = 16.797
-    v6com = 45.0862
+    v6com = 36.0078
     Mior = 0
     oldframeting = [0,0]
     Timingscolor = ''
@@ -135,7 +136,7 @@ def lvlcal(fps,Timings,seting):
             ERRORFRAMETIM = 1
         if len(Timing) != 1: #v6 mode!
             try:
-                Xframe = stabily(fps,Timing[1],oldframeting)
+                Xframe, oldfer = stabily(fps,Timing[1],oldframeting,oldfer)
             except ValueError:
                 print(translation("lvlcal:Это точно кадр? > -") + str(Timing[1]) + translation("; / Номер - ") + str(Сounter))
                 return 0
@@ -148,10 +149,10 @@ def lvlcal(fps,Timings,seting):
                     return 0
                 Fmc = round(Fmc,4)
                 if Fmc < oldframeting[0]:
-                    print(translation("lvlcal:Назад в будуще? > -")  + str(Timing[1]) + translation("; / Номер - ") + str(Сounter))
+                    print(translation("lvlcal:Назад в будуще? > -")  + str(Timing[1]) +";"+ translation(" / Номер - ") + str(Сounter))
                     return 0
             except ValueError:
-                print(translation("lvlcal:Это точно кадр? > -") + str(Timing[1]) + translation("; / Номер - ") + str(Сounter))
+                print(translation("lvlcal:Это точно кадр? > -") + str(Timing[1]) +";"+ translation(" / Номер - ") + str(Сounter))
                 return 0         
             ############ память
             oldframeting[1] = float(oldframeting[0])
@@ -413,8 +414,8 @@ def addlvl():
         pp = lvlcal(com5,com4,"2")
         if pp == 0:
             return 0
-        if len(com2.split(":")) != 1 or len(com3.split(":")) != 1 or len(com6.split(":")) != 1:
-            print("add.lvl:Нельзя использовать ':' в авторах, верификаторе или в id")
+        if len(com1.split(":")) != 1 or len(com2.split(":")) != 1 or len(com3.split(":")) != 1 or len(com6.split(":")) != 1:
+            print("add.lvl:Нельзя использовать ':' в названиях, авторах, верификаторе или в id")
             return 0
         fan = balanceKZ(int(com5),legacytranslat(com4),"2")
     except KeyboardInterrupt:
@@ -1084,10 +1085,11 @@ def vido(fps,tim): #делает по datapp счетчик
 
 
 def altaver(color): # версия
-    if color != "BW":
-        return f'{Fore.CYAN}ALTA v6.3{Fore.RESET}'
-    else:
-        return 'ALTA v6.3'
+    match color:
+        case 'color':
+            return f'{Fore.CYAN}ALTA v6.4{Fore.RESET}'
+        case 'BW':
+            return 'ALTA v6.4'
 
 
 def clinker(timing,frame): #ну из название понятно что оно делает
@@ -1106,16 +1108,20 @@ def clinker(timing,frame): #ну из название понятно что о�
         linker = linker + str(stiming[count]) +'-'+ str(sframe[count])
         count = count + 1
     return linker    
-
-def stabily(fps,timing,oldtimings):
+def stabily(fps,timing,oldtimings,oldfec):
     if oldtimings[1] != 0:
         Fmc = 1000 / (int(fps) / int(timing))
         reul = (round(float(Fmc),5) - round(oldtimings[0],5)) % 2
+        ref = (round(float(Fmc),5) - round(oldtimings[0],5)) // 2
+        oldlogia = oldfec
+        if abs(oldlogia - ref) <= 6:
+            reul = 0
         if reul < 0:
             reul = 0
     else:
-        return 0
-    return reul
+        return 0,0
+
+    return reul,ref
 clear("0")
 print(translation("Версия ") + altaver("color") + translation(" от Prosto_Maksim"))
 print(translation("Для помощи напишите help"))
