@@ -395,7 +395,21 @@ autoclear = settingfiles("read", "clear", 1) #какой режим чистки
 KZbalance = settingfiles("read", "lvlbanace", 1)
 TPS = int(standard) #Переносится стандартный фпс в переменную где с ним будут работать.
 
-
+def lvlcheck(lvl):
+    scan = 0
+    try:
+        data = open("Base/lvldatabase.altalvl", 'r')
+    except FileNotFoundError:
+        print(translation("lvlcheck:Датабаза не найдена"))
+        return 0
+    while scan == 0:
+        lvlscan = data.readline().rstrip('\n')
+        if lvlscan.lower() == lvl.lower():
+            return 2
+        if lvlscan == "":
+            scan = 1
+    data.close()
+    return 3
 def addlvl():
 
     try:
@@ -415,31 +429,42 @@ def addlvl():
         if pp == 0:
             return 0
         if len(com1.split(":")) != 1 or len(com2.split(":")) != 1 or len(com3.split(":")) != 1 or len(com6.split(":")) != 1:
-            print("add.lvl:Нельзя использовать ':' в названиях, авторах, верификаторе или в id")
+            print(translation("add.lvl:Нельзя использовать ':' в названиях, авторах, верификаторе или в id"))
             return 0
         fan = balanceKZ(int(com5),legacytranslat(com4),"2")
     except KeyboardInterrupt:
         sys.exit()
-    
-    scan = 0
-    try:
-        data = open("Base/lvldatabase.altalvl", 'r')
-    except FileNotFoundError:
-        print(translation("add.lvl:Датабаза не найдена"))
-        return 0
-    while scan == 0:
-        lvlscan = data.readline().rstrip('\n')
-        if lvlscan.lower() == com1.lower():
-            print(translation("Он уже в базе"))
+    addnew = 1
+    status = "0"
+    altaid = 0
+    while addnew == 1:
+        if status == "0":
+            addnew = lvlcheck(str(com1))
+        else:
+            addnew = lvlcheck(str(altaid)+":"+ str(com1))
+        if addnew == 0:
             return 0
-        if lvlscan == "":
-            scan = 1
-    data.close()
+        elif addnew == 2 and status == "0":
+            print(translation("Найден лвл с таким-же названием. создать второй?(y,N:д,Н)"))
+            status = input(">")
+            if status.lower() == "y" or status.lower() == "д":
+                status = "1"
+        if status == "1" and addnew != 3:
+            addnew = 1
+            altaid = altaid + 1
+    if addnew == 2 or addnew == 0:
+        print(translation("add.lvl:Отмена"))
+        return 2
+
     try:
         data = open("Base/lvldatabase.altalvl", 'a')
     except FileNotFoundError:
         return 0
-    data.write("" + str(com1.lower()))
+    if altaid != 0:
+        data.write(str(altaid) + ":" + str(com1.lower()))
+        print(translation("У уровня внутри ALTA будет такое название> "+ str(altaid) + ":" + str(com1.lower())))
+    else:
+        data.write("" + str(com1.lower()))
     data.write("\nAuthor(S):" + str(com2.lower()))
     data.write("\nVerification:" + str(com3.lower()))
     data.write("\nTimings:" + str(com4.lower()))
@@ -1087,9 +1112,9 @@ def vido(fps,tim): #делает по datapp счетчик
 def altaver(color): # версия
     match color:
         case 'color':
-            return f'{Fore.CYAN}ALTA v6.4{Fore.RESET}'
+            return f'{Fore.CYAN}ALTA v6.5{Fore.RESET}'
         case 'BW':
-            return 'ALTA v6.4'
+            return 'ALTA v6.5'
 
 
 def clinker(timing,frame): #ну из название понятно что оно делает
