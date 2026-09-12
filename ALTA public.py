@@ -1156,10 +1156,10 @@ def stabily(fps,timing,oldtimings,oldfec): #функция v6 для проме�
 def ALTACODE(filecode): #выполняет скрипты
     try:
         filecode = filecode.replace('"', '')
+        code = open(filecode,'r')
     except FileNotFoundError:
         print("alta.code:файл не найден")
         return 0
-    code = open(filecode,'r')
     datas = ''
     while datas.rstrip("\n") != "end": #дробить на строки где команда и аргументы
         datas = code.readline().rstrip("\n")
