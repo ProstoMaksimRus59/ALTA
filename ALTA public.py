@@ -490,24 +490,24 @@ def infolvl(lvl,setmode):
     while scan == 0:
         lvlscan = data.readline().rstrip('\n')
         if lvlscan.lower() == lvl.lower():
-            info = 8
-            while info != 0:
-                info = info - 1
+            info = 0
+            while info != 7:
+                info = info + 1
                 lvlinfo = data.readline().rstrip('\n').lower()
                 if setmode == "1":
                     print(lvlinfo)
-                if info == 1:
-                    return lvlinfo.split(":")[-1]
+                if info == 6:
+                    pp = lvlinfo.split(":")[-1]
                 scan = 1
                 good = 1
         if lvlscan == "":
             scan = 1
-    
     if good == 0:
         if setmode == "1":
             print(translation("info.lvl:лвл не Найден в базе"))
         return 0
     data.close()
+    return pp
 
 
 
@@ -1116,9 +1116,9 @@ def vido(fps,tim): #делает по datapp счетчик
 def altaver(color): # версия
     match color:
         case 'color':
-            return f'{Fore.CYAN}ALTA v6.6{Fore.RESET}'
+            return f'{Fore.CYAN}ALTA v6.6_1{Fore.RESET}'
         case 'BW':
-            return 'ALTA v6.6'
+            return 'ALTA v6.6_1'
 
 
 def clinker(timing,frame): #ну из название понятно что оно делает
