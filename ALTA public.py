@@ -410,30 +410,30 @@ def lvlcheck(lvl):
             scan = 1
     data.close()
     return 3
-def addlvl():
-
-    try:
-        print(translation("Название лвла")) #Это почти как заглушка, потом будет что-то нормальное)
-        com1 = input(">")
-        print(translation("Автор(ы) лвла"))
-        com2 = input(">")
-        print(translation("Верификатор лвла(если нет, то - ?)"))
-        com3 = input(">")
-        print(translation("Тайминги лвла"))
-        com4 = input(">")
-        print(translation("FPS"))
-        com5 = input(">")
-        print(translation("idlvl:"))
-        com6 = input(">")
-        pp = lvlcal(com5,com4,"2")
-        if pp == 0:
-            return 0
-        if len(com1.split(":")) != 1 or len(com2.split(":")) != 1 or len(com3.split(":")) != 1 or len(com6.split(":")) != 1:
-            print(translation("add.lvl:Нельзя использовать ':' в названиях, авторах, верификаторе или в id"))
-            return 0
-        fan = balanceKZ(int(com5),legacytranslat(com4),"2")
-    except KeyboardInterrupt:
-        sys.exit()
+def addlvl(com1,com2,com3,com4,com5,com6,com7):
+    if com1 == "0" and com2 == "0" and com3 == "0" and com4 == "0" and com5 == "0" and com6 == "0" and com7 == "0":
+        try:
+            print(translation("Название лвла")) #Это почти как заглушка, потом будет что-то нормальное)
+            com1 = input(">")
+            print(translation("Автор(ы) лвла"))
+            com2 = input(">")
+            print(translation("Верификатор лвла(если нет, то - ?)"))
+            com3 = input(">")
+            print(translation("Тайминги лвла"))
+            com4 = input(">")
+            print(translation("FPS"))
+            com5 = input(">")
+            print(translation("idlvl:"))
+            com6 = input(">")
+        except KeyboardInterrupt:
+            sys.exit()
+    pp = lvlcal(com5,com4,"2")
+    if pp == 0:
+        return 0
+    if len(com1.split(":")) != 1 or len(com2.split(":")) != 1 or len(com3.split(":")) != 1 or len(com6.split(":")) != 1:
+        print(translation("add.lvl:Нельзя использовать ':' в названиях, авторах, верификаторе или в id"))
+        return 0
+    fan = balanceKZ(int(com5),legacytranslat(com4),"2")
     addnew = 1
     status = "0"
     altaid = 0
@@ -445,9 +445,12 @@ def addlvl():
         if addnew == 0:
             return 0
         elif addnew == 2 and status == "0":
-            print(translation("Найден лвл с таким-же названием. создать второй?(y,N:д,Н)"))
-            status = input(">")
-            if status.lower() == "y" or status.lower() == "д":
+            if com7 == '0':
+                print(translation("Найден лвл с таким-же названием. создать второй?(y,N:д,Н)"))
+                status = input(">")
+                if status.lower() == "y" or status.lower() == "д":
+                    status = "1"
+            elif com7 == "y":
                 status = "1"
         if status == "1" and addnew != 3:
             addnew = 1
@@ -487,7 +490,7 @@ def infolvl(lvl,setmode):
     while scan == 0:
         lvlscan = data.readline().rstrip('\n')
         if lvlscan.lower() == lvl.lower():
-            info = 7
+            info = 8
             while info != 0:
                 info = info - 1
                 lvlinfo = data.readline().rstrip('\n').lower()
@@ -634,12 +637,13 @@ def loaddb():
 
 
 
-def savedb():
-    try:
-        name = input(translation("Название>"))
-        folder = input(translation("Куда создать?(путь до любой папки)>")).replace('"', '')
-    except KeyboardInterrupt:
-        sys.exit()
+def savedb(name,folder):
+    if name == "0" and folder == "0":
+        try:
+            name = input(translation("Название>"))
+            folder = input(translation("Куда создать?(путь до любой папки)>")).replace('"', '')
+        except KeyboardInterrupt:
+            sys.exit()
     zip = zipfile.ZipFile(name +".zip", "w") #Создает архив
     try:
         zip.write("Base") #Создает папку в нем
@@ -1112,9 +1116,9 @@ def vido(fps,tim): #делает по datapp счетчик
 def altaver(color): # версия
     match color:
         case 'color':
-            return f'{Fore.CYAN}ALTA v6.5{Fore.RESET}'
+            return f'{Fore.CYAN}ALTA v6.6{Fore.RESET}'
         case 'BW':
-            return 'ALTA v6.5'
+            return 'ALTA v6.6'
 
 
 def clinker(timing,frame): #ну из название понятно что оно делает
@@ -1132,8 +1136,9 @@ def clinker(timing,frame): #ну из название понятно что о�
             linker = linker + ";"
         linker = linker + str(stiming[count]) +'-'+ str(sframe[count])
         count = count + 1
-    return linker    
-def stabily(fps,timing,oldtimings,oldfec):
+    return linker
+
+def stabily(fps,timing,oldtimings,oldfec): #функция v6 для промежутков
     if oldtimings[1] != 0:
         Fmc = 1000 / (int(fps) / int(timing))
         reul = (round(float(Fmc),5) - round(oldtimings[0],5)) % 2
@@ -1147,6 +1152,59 @@ def stabily(fps,timing,oldtimings,oldfec):
         return 0,0
 
     return reul,ref
+
+def ALTACODE(filecode): #выполняет скрипты
+    try:
+        filecode = filecode.replace('"', '')
+    except FileNotFoundError:
+        print("alta.code:файл не найден")
+        return 0
+    code = open(filecode,'r')
+    datas = ''
+    while datas.rstrip("\n") != "end": #дробить на строки где команда и аргументы
+        datas = code.readline().rstrip("\n")
+        comand = datas[:3] #команды могут быть ток из трех букв!!
+        name = datas[4:].split('/:/')
+        match comand: #набор команд
+            case "reb":
+                try:
+                    com = scanallvl()
+                except FileNotFoundError:
+                        print           
+            
+                for lvl in com:
+                    if lvl != "0":
+                        try:
+                            scanpplvl(lvl)
+                        except FileNotFoundError:
+                            print
+            case "adp":
+                addpla(name[0])
+            case "adv":
+                addvict(name[0],name[1])
+            case "dev":
+                deleteplalvl(name[0],name[1])
+            case "sav":
+                savedb(name[0],name[1])
+            case "chi":
+                lvlcha(name[0], "6", name[1])
+            case "chv":
+                lvlcha(name[0], "1", name[1])
+            case "cht":
+                lvlcha(name[0],"2",name[2])
+                lvlcha(name[0],"3",name[1])
+                scanpplvl(name[0])
+            case "adl":
+                addlvl(name[0],name[1],name[2],name[3],name[4],name[5],name[6])
+            case "rpl":
+                scanpplvl(name[0])
+            case "cls":
+                clear("1")
+            case "ext":
+                sys.exit()
+    code.close()
+    return 1
+
 clear("0")
 print(translation("Версия ") + altaver("color") + translation(" от Prosto_Maksim"))
 print(translation("Для помощи напишите help"))
@@ -1219,6 +1277,7 @@ while 1 == 1:
                     print(translation("  frep - примерное измерение фрейм перфектов"))
                     print(translation('  helper.vido - автомат ставить пп на монтаже!'))
                     print(translation("  clinker - соединение таймингов и промежутков"))
+                    print(translation("  alta.code - выполняет простые скрипты для дб"))
                 case "fps":
                     print(translation("Команда FPS - для изменения фпса расчета пп"))
                     print(translation("  Еще при пропуска фпса в chatim будет фпс который вы указали в fps"))
@@ -1361,6 +1420,25 @@ while 1 == 1:
                     print(translation(" 1.тайминги>(Через ;)"))
                     print(translation(" 2.промежутки>(Через -)"))
                     print(translation(" и после этого она их соединить"))
+                case "alta.code":
+                    print(translation("alta.code - выполняет простые скрипты для дб"))
+                    print(translation("для работы нужен будет файл скрипта .altas"))
+                    print(translation("Логика alta.code"))
+                    print(translation(" 1. конструкция '/:/' - делить аргументы"))
+                    print(translation(" 2. команды всегда первые 3 буквы"))
+                    print(translation(" 3. между агументов не доложно быть пробелов\n  'adv prosto_maksim/:/zolirum final'"))
+                    print(translation("\nКоманды alta.code"))
+                    print(translation("\n 1.adl - add.lvl записывается в коде так \n 'adl уровень/:/автор/:/верифер/:/тайминги/:/фпс/:/id/:/создание дубликата 'y' ну или 'n''\nпример adl testlvl/:/vipus/:/vipus/:/2;2;2/:/240/:/757894/:/y"))
+                    print(translation("\n 2.adp - add.pla записывается в коде так \n 'adp игрок/:/уровень'\nпример 'adp spacekz/:/domarium'"))
+                    print(translation("\n 3.dev - del.pla записывается так-же как и adp"))
+                    print(translation("\n 4.cht - chatim записывается в коде так \n 'cht уровень/:/фпс/тайминги'\nпример 'cht vhk/:/240/:/3-56;1-230'"))
+                    print(translation("\n 5.chv - chaver записывается в коде так \n 'chv уровень/:/верифер'\nпример 'chv vhk/:/prosto_maksim'"))
+                    print(translation("\n 6.chi - chaid записывается в коде так \n 'chi уровень/:/id'\nпример 'chv vhk/:/880555'"))
+                    print(translation("\n 7.sav - save.db записывается в коде так \n 'sav название дб/:/путь куда сохранить'\nпример 'sav Base/:/D:\\mytempfile'"))
+                    print(translation("\n 8.reb - rebal записывается в коде так \n 'rebal'"))
+                    print(translation("\n 9.rpl - внутренная функция alta 'scanpplvl' \n пересчитает что связанно с написанным уровнем\nпример 'rpl vhk'"))
+                    print(translation("\n 10.cls - clear записывается в коде так \n 'cls'"))
+                    print(translation("\n 11.end - обязательное окончание скипта"))
         case "clear":
             clear("1")
         
@@ -1469,7 +1547,7 @@ while 1 == 1:
                 sys.exit()        
         
         case "add.lvl":
-            addlvl()
+            addlvl('0','0','0','0','0','0','0')
         
         case "add.vict":
             try:
@@ -1521,7 +1599,7 @@ while 1 == 1:
             loaddb()
         
         case "save.db":
-            savedb()
+            savedb('0','0')
         
         case "balcal":
             try:
@@ -1622,5 +1700,10 @@ while 1 == 1:
         case "clinker":
             com = input(translation("Тайминги>"))
             com3 = input(translation("промежутки>"))
-            print(translation("Готово!"))
             print(clinker(com,com3))
+        case "alta.code":
+            if auto == 9:#если только команда
+                com = input(translation("Вставьте файл .altas>"))
+                ALTACODE(com)
+            else: #если с ней что-то еще написано
+                ALTACODE(requirements) 

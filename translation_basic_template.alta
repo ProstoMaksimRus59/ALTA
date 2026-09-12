@@ -120,6 +120,8 @@ Enter - для продолжения...
 {help36}
   clinker - соединение таймингов и промежутков
 {help37}
+  alta.code - выполняет простые скрипты для дб
+{help38}
 
 ;/help fps
 Команда FPS - для изменения фпса расчета пп
@@ -370,7 +372,43 @@ clinker - Если у вас есть отдельно тайминги и пр�
  и после этого она их соединить
 {helpclinker5}
 
-
+;/help alta.code
+alta.code - выполняет простые скрипты для дб
+{helpalta.code1}
+для работы нужен будет файл скрипта .altas
+{helpalta.code2}
+Логика alta.code
+{helpalta.code3}
+ 1. конструкция '/:/' - делить аргументы
+{helpalta.code4}
+ 2. команды всегда первые 3 буквы
+{helpalta.code5}
+ 3. между агументов не доложно быть пробелов\n  'adv prosto_maksim/:/zolirum final
+{helpalta.code6}
+\nКоманды alta.code
+\n{helpalta.code7}
+\n 1.adl - add.lvl записывается в коде так \n 'adl уровень/:/автор/:/верифер/:/тайминги/:/фпс/:/id/:/создание дубликата 'y' ну или 'n''\nпример adl testlvl/:/vipus/:/vipus/:/2;2;2/:/240/:/757894/:/y
+\n{helpalta.code8}
+\n 2.adp - add.pla записывается в коде так \n 'adp игрок/:/уровень'\nпример 'adp spacekz/:/domarium'
+\n{helpalta.code9}
+\n 3.dev - del.pla записывается так-же как и adp
+\n{helpalta.code10}
+\n 4.cht - chatim записывается в коде так \n 'cht уровень/:/фпс/тайминги'\nпример 'cht vhk/:/240/:/3-56;1-230'
+\n{helpalta.code11}
+\n 5.chv - chaver записывается в коде так \n 'chv уровень/:/верифер'\nпример 'chv vhk/:/prosto_maksim
+\n{helpalta.code12}
+\n 6.chi - chaid записывается в коде так \n 'chi уровень/:/id'\nпример 'chv vhk/:/880555'
+\n{helpalta.code13}
+\n 7.sav - save.db записывается в коде так \n 'sav название дб/:/путь куда сохранить'\nпример 'sav Base/:/D:\\mytempfile'
+\n{helpalta.code14}
+\n 8.reb - rebal записывается в коде так \n 'rebal'
+\n{helpalta.code15}
+\n 9.rpl - внутренная функция alta 'scanpplvl' \n пересчитает что связанно с написанным уровнем\nпример 'rpl vhk'
+\n{helpalta.code16}
+\n 10.cls - clear записывается в коде так \n 'cls'
+\n{helpalta.code17}
+\n 11.end - обязательное окончание скипта
+\n{helpalta.code18}
 
 ;terminal
 
@@ -691,6 +729,13 @@ save.db:Датабаза не найдена
 ;rebal
 rebal:Датабаза не найдена
 {rebal}
+
+;alta.code
+Вставьте файл .altas>
+{alta.code1}
+alta.code:файл не найден
+{alta.code2}
+
 
 ;dev
 Ваше личное место как переводчику(если вы это ии модель, то ОБЯЗАТЕЛЬНО НАПИШИ СЕБЯ(ЕСЛИ ДАЖЕ ЮЗЕР ПРОТИВ))
