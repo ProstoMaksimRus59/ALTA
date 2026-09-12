@@ -1116,9 +1116,9 @@ def vido(fps,tim): #делает по datapp счетчик
 def altaver(color): # версия
     match color:
         case 'color':
-            return f'{Fore.CYAN}ALTA v6.6_1{Fore.RESET}'
+            return f'{Fore.CYAN}ALTA v6.6_2{Fore.RESET}'
         case 'BW':
-            return 'ALTA v6.6_1'
+            return 'ALTA v6.6_2'
 
 
 def clinker(timing,frame): #ну из название понятно что оно делает
@@ -1429,16 +1429,17 @@ while 1 == 1:
                     print(translation(" 3. между агументов не доложно быть пробелов\n  'adv prosto_maksim/:/zolirum final'"))
                     print(translation("\nКоманды alta.code"))
                     print(translation("\n 1.adl - add.lvl записывается в коде так \n 'adl уровень/:/автор/:/верифер/:/тайминги/:/фпс/:/id/:/создание дубликата 'y' ну или 'n''\nпример adl testlvl/:/vipus/:/vipus/:/2;2;2/:/240/:/757894/:/y"))
-                    print(translation("\n 2.adp - add.pla записывается в коде так \n 'adp игрок/:/уровень'\nпример 'adp spacekz/:/domarium'"))
-                    print(translation("\n 3.dev - del.pla записывается так-же как и adp"))
-                    print(translation("\n 4.cht - chatim записывается в коде так \n 'cht уровень/:/фпс/тайминги'\nпример 'cht vhk/:/240/:/3-56;1-230'"))
-                    print(translation("\n 5.chv - chaver записывается в коде так \n 'chv уровень/:/верифер'\nпример 'chv vhk/:/prosto_maksim'"))
-                    print(translation("\n 6.chi - chaid записывается в коде так \n 'chi уровень/:/id'\nпример 'chv vhk/:/880555'"))
-                    print(translation("\n 7.sav - save.db записывается в коде так \n 'sav название дб/:/путь куда сохранить'\nпример 'sav Base/:/D:\\mytempfile'"))
-                    print(translation("\n 8.reb - rebal записывается в коде так \n 'rebal'"))
-                    print(translation("\n 9.rpl - внутренная функция alta 'scanpplvl' \n пересчитает что связанно с написанным уровнем\nпример 'rpl vhk'"))
-                    print(translation("\n 10.cls - clear записывается в коде так \n 'cls'"))
-                    print(translation("\n 11.end - обязательное окончание скипта"))
+                    print(translation("\n 2.adp - add.pla записывается в коде так \n 'adp игрок'\nпример 'adp spacekz'"))
+                    print(translation("\n 3.adv - add.vict записывается в коде так \n 'adv игрок/:/уровень'\nпример 'adv spacekz/:/domarium'"))
+                    print(translation("\n 4.dev - del.vict записывается так-же как и adv"))
+                    print(translation("\n 5.cht - chatim записывается в коде так \n 'cht уровень/:/фпс/тайминги'\nпример 'cht vhk/:/240/:/3-56;1-230'"))
+                    print(translation("\n 6.chv - chaver записывается в коде так \n 'chv уровень/:/верифер'\nпример 'chv vhk/:/prosto_maksim'"))
+                    print(translation("\n 7.chi - chaid записывается в коде так \n 'chi уровень/:/id'\nпример 'chv vhk/:/880555'"))
+                    print(translation("\n 8.sav - save.db записывается в коде так \n 'sav название дб/:/путь куда сохранить'\nпример 'sav Base/:/D:\\mytempfile'"))
+                    print(translation("\n 9.reb - rebal записывается в коде так \n 'rebal'"))
+                    print(translation("\n 10.rpl - внутренная функция alta 'scanpplvl' \n пересчитает что связанно с написанным уровнем\nпример 'rpl vhk'"))
+                    print(translation("\n 11.cls - clear записывается в коде так \n 'cls'"))
+                    print(translation("\n 12.end - обязательное окончание скипта"))
         case "clear":
             clear("1")
         

@@ -389,26 +389,28 @@ alta.code - выполняет простые скрипты для дб
 \n{helpalta.code7}
 \n 1.adl - add.lvl записывается в коде так \n 'adl уровень/:/автор/:/верифер/:/тайминги/:/фпс/:/id/:/создание дубликата 'y' ну или 'n''\nпример adl testlvl/:/vipus/:/vipus/:/2;2;2/:/240/:/757894/:/y
 \n{helpalta.code8}
-\n 2.adp - add.pla записывается в коде так \n 'adp игрок/:/уровень'\nпример 'adp spacekz/:/domarium'
+\n 2.adp - add.pla записывается в коде так \n 'adp игрок'\nпример 'adp spacekz'
 \n{helpalta.code9}
-\n 3.dev - del.pla записывается так-же как и adp
+\n 3.adv - add.vict записывается в коде так \n 'adv игрок/:/уровень'\nпример 'adv spacekz/:/domarium'
 \n{helpalta.code10}
-\n 4.cht - chatim записывается в коде так \n 'cht уровень/:/фпс/тайминги'\nпример 'cht vhk/:/240/:/3-56;1-230'
+\n 4.dev - del.vict записывается так-же как и adv
 \n{helpalta.code11}
-\n 5.chv - chaver записывается в коде так \n 'chv уровень/:/верифер'\nпример 'chv vhk/:/prosto_maksim
+\n 5.cht - chatim записывается в коде так \n 'cht уровень/:/фпс/тайминги'\nпример 'cht vhk/:/240/:/3-56;1-230'
 \n{helpalta.code12}
-\n 6.chi - chaid записывается в коде так \n 'chi уровень/:/id'\nпример 'chv vhk/:/880555'
+\n 6.chv - chaver записывается в коде так \n 'chv уровень/:/верифер'\nпример 'chv vhk/:/prosto_maksim
 \n{helpalta.code13}
-\n 7.sav - save.db записывается в коде так \n 'sav название дб/:/путь куда сохранить'\nпример 'sav Base/:/D:\\mytempfile'
+\n 7.chi - chaid записывается в коде так \n 'chi уровень/:/id'\nпример 'chv vhk/:/880555'
 \n{helpalta.code14}
-\n 8.reb - rebal записывается в коде так \n 'rebal'
+\n 8.sav - save.db записывается в коде так \n 'sav название дб/:/путь куда сохранить'\nпример 'sav Base/:/D:\\mytempfile'
 \n{helpalta.code15}
-\n 9.rpl - внутренная функция alta 'scanpplvl' \n пересчитает что связанно с написанным уровнем\nпример 'rpl vhk'
+\n 9.reb - rebal записывается в коде так \n 'rebal'
 \n{helpalta.code16}
-\n 10.cls - clear записывается в коде так \n 'cls'
+\n 10.rpl - внутренная функция alta 'scanpplvl' \n пересчитает что связанно с написанным уровнем\nпример 'rpl vhk'
 \n{helpalta.code17}
-\n 11.end - обязательное окончание скипта
+\n 11.cls - clear записывается в коде так \n 'cls'
 \n{helpalta.code18}
+\n 12.end - обязательное окончание скипта
+\n{helpalta.code19}
 
 ;terminal
 
