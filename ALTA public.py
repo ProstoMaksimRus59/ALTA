@@ -479,7 +479,7 @@ def addlvl(com1,com2,com3,com4,com5,com6,com7):
     data.close()
 
 
-def infolvl(lvl,setmode):
+def infolvl(lvl):
     good = 0
     try:
         data = open("Base/lvldatabase.altalvl", 'r')
@@ -494,28 +494,25 @@ def infolvl(lvl,setmode):
             while info != 7:
                 info = info + 1
                 lvlinfo = data.readline().rstrip('\n').lower()
-                if setmode == "1":
-                    print(lvlinfo)
-                if info == 6:
-                    pp = lvlinfo.split(":")[-1]
+                print(lvlinfo)
                 scan = 1
                 good = 1
         if lvlscan == "":
             scan = 1
     if good == 0:
-        if setmode == "1":
-            print(translation("info.lvl:лвл не Найден в базе"))
-        return 0
+        print(translation("info.lvl:лвл не Найден в базе"))
     data.close()
-    return pp
 
 
 
 def addvict(Player,lvld): #Дает добавить лвл игроку
     try:
-        pp = float(infolvl(lvld, "0"))
-    except ValueError:
-        print(translation("Точно вел пп?"))
+        if getinfolvl(lvld,"4") == 0:
+            print(translation("add.vict:это точно уровень с датабазы?"))
+            return 0
+        pp = float(getinfolvl(lvld,"6"))
+    except:
+        print(translation("add.vict:странная ошибка..."))
         return 0
     pp = round(pp)
     Player = Player + ".altapl"
@@ -702,7 +699,7 @@ def plalvlcomm(requirements): #Для безопастности вынес эт
                 print(translation("Топ всех лвлов>"))
                 pplvl = []
                 for lvl in alllvl:
-                    pplvl.append(infolvl(lvl,"0")) #Получает пп
+                    pplvl.append(getinfolvl(lvl,"6")) #Получает пп
                 top(alllvl,pplvl) #Делает топ
             
             if requirements == "-ver": #если лвл
@@ -711,8 +708,8 @@ def plalvlcomm(requirements): #Для безопастности вынес эт
                 print(translation("Топ верифнутых лвлов>"))
                 pplvl = []
                 for lvl in safelllvl:
-                    if scanerpla(lvl, '2') != "?":
-                        pplvl.append(infolvl(lvl,"0")) #Получает пп
+                    if getinfolvl(lvl, '2') != "?":
+                        pplvl.append(getinfolvl(lvl,"6")) #Получает пп
                     else:
                         alllvl.remove(lvl)
                 try:
@@ -790,11 +787,11 @@ def balanceKZ(fps,sequence,lvlcalmode): #Не мое, так-что комент
 
 
 def scanpplvl(lvl):
-    pp = lvlcal(scanerpla(lvl,"4"),scanerpla(lvl,"3"),"2")
+    pp = lvlcal(getinfolvl(lvl,"4"),getinfolvl(lvl,"3"),"2")
     if pp == 0:
         return 0
     lvlcha(lvl,"5", pp)
-    lvlcha(lvl,"4", str(balanceKZ(int(scanerpla(lvl,"4")),legacytranslat(str(scanerpla(lvl,"3"))),"2")))
+    lvlcha(lvl,"4", str(balanceKZ(int(getinfolvl(lvl,"4")),legacytranslat(str(getinfolvl(lvl,"3"))),"2")))
 
     allvict = Victors(lvl)
     for plar in allvict:
@@ -868,7 +865,7 @@ def lvlcha(lvl,type,nyper): #дает менять данные в базе о �
 
 
 
-def scanerpla(lvl,type):
+def getinfolvl(lvl,type):
     
     data = open("Base/lvldatabase.altalvl", 'r')
     lvls = data.readlines()
@@ -941,7 +938,7 @@ def freme(fps,Timings): #считает не точно но пойдет)
         Lvl = Timings.rstrip(Timings[-1])
         
         oldTimings = Timings
-        Timings = scanerpla(Lvl,"3") #Ищет тайминги в датабазе
+        Timings = getinfolvl(Lvl,"3") #Ищет тайминги в датабазе
         if Timings == 0:
             print(translation("frep:Уровень - ") + oldTimings + translation("<не найден>"))
             return 0    
@@ -1058,8 +1055,13 @@ def vido(fps,tim): #делает по datapp счетчик
     while count != (len(clickframe)-1): #заполняет наш свигаватель
         clickframe[count + 1] = clickframe[0] + count+1
         count = count + 1
+    
     file = input(translation("файл .kdenlive>")).replace('"', '') #просить файл от монтажки с сразу записывает в переменную
-    files = open(file,'r')
+    try:
+        files = open(file,'r')
+    except FileNotFoundError:
+        print(translation("helper.vido>файл не найден"))
+
     filesall = files.read()
     file1 = filesall.split('pp</property>') #деление по datapp
     file2 = []
@@ -1112,13 +1114,12 @@ def vido(fps,tim): #делает по datapp счетчик
     files.close()
     print(translation("пп добавлены в файл вашего видео!"))
 
-
 def altaver(color): # версия
     match color:
         case 'color':
-            return f'{Fore.CYAN}ALTA v6.6_2{Fore.RESET}'
+            return f'{Fore.CYAN}ALTA v6.7{Fore.RESET}'
         case 'BW':
-            return 'ALTA v6.6_2'
+            return 'ALTA v6.7'
 
 
 def clinker(timing,frame): #ну из название понятно что оно делает
@@ -1158,7 +1159,7 @@ def ALTACODE(filecode): #выполняет скрипты
         filecode = filecode.replace('"', '')
         code = open(filecode,'r')
     except FileNotFoundError:
-        print("alta.code:файл не найден")
+        print(translation("alta.code:файл не найден"))
         return 0
     datas = ''
     while datas.rstrip("\n") != "end": #дробить на строки где команда и аргументы
@@ -1539,9 +1540,9 @@ while 1 == 1:
             try:
                 if auto == 8: #если только команда
                     com = input(">>")
-                    infolvl(com, "1")
+                    infolvl(com)
                 else: #если с ней что-то еще написано
-                    infolvl(requirements, "1")
+                    infolvl(requirements)
             except ValueError: #защита от идиота
                 print(translation("info.lvl:Ты точно ввел нужное?"))
             except KeyboardInterrupt:
