@@ -226,7 +226,7 @@ def lvlcal(fps,Timings,seting):
             if Fmc < 3600000:
                 print(translation("Игровая длина:")+str(math.floor((Fmc/1000//60)))+translation("мин ") + str(math.floor((Fmc/1000%60)))+ translation("сек ")+ str(math.floor((Fmc%1000)))+ translation("мс"))
             else:
-                print(translation("Игровая длина:")+str(math.floor((Fmc/60000//60)))+translation("час ")+str(math.floor((Fmc/1000%60)))+translation("мин ") + str(math.floor((Fmc/1000%60)))+ translation("сек ")+ str(math.floor((Fmc%1000)))+ translation("мс"))
+                print(translation("Игровая длина:")+str(math.floor((Fmc/60000//60)))+translation("час ")+str(math.floor((Fmc/60000%60)))+translation("мин ") + str(math.floor((Fmc/1000%60)))+ translation("сек ")+ str(math.floor((Fmc%1000)))+ translation("мс"))
 
         else:
             print(translation("\nВерсия ")+altaver("color")+translation(" (legacy mode) от Prosto_Maksim"))
@@ -1061,7 +1061,7 @@ def vido(fps,tim): #делает по datapp счетчик
         files = open(file,'r')
     except FileNotFoundError:
         print(translation("helper.vido>файл не найден"))
-
+        return 0
     filesall = files.read()
     file1 = filesall.split('pp</property>') #деление по datapp
     file2 = []
@@ -1117,9 +1117,9 @@ def vido(fps,tim): #делает по datapp счетчик
 def altaver(color): # версия
     match color:
         case 'color':
-            return f'{Fore.CYAN}ALTA v6.7{Fore.RESET}'
+            return f'{Fore.CYAN}ALTA v6.7_1{Fore.RESET}'
         case 'BW':
-            return 'ALTA v6.7'
+            return 'ALTA v6.7_1'
 
 
 def clinker(timing,frame): #ну из название понятно что оно делает
