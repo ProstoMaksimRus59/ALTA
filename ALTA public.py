@@ -6,15 +6,15 @@ def translation(text): #функция перевода(; - коментарий
     except FileNotFoundError:
         return text
     Check = file.read()
-    next = 0
+    nextcheck = 0
     file.close()
     for tran in Check.split("\n"):
         try:
             if tran[0] != ';':
-                if next == 1:
+                if nextcheck == 1:
                     return tran.replace("\\n", "\n")
                 if tran == text.replace("\n", "\\n") or tran == text:
-                    next = 1
+                    nextcheck = 1
         except IndexError:
             g = 1
     return text
@@ -105,7 +105,7 @@ def lvlcal(fps,Timings,seting):
     oldframeting = [0,0]
     Timingscolor = ''
     Xframe = 0
-    ERRORFRAMETIM = 0
+    errorframetim = 0
     if Timings == "0": #если ничего нет, то повторно попросить вести тайминги.
         print(translation("\nПометка - Если тайминг такой например - невидимый вейв\n(тоесь слепой 100%) то перед таймингом писать '?'"))
         print(translation("Пометка - Любые клики которым просто достаточно нажать заранее - не должны учитываться никак"))
@@ -133,7 +133,7 @@ def lvlcal(fps,Timings,seting):
         except:
             lol = 1
         if len(Timing) != 2:
-            ERRORFRAMETIM = 1
+            errorframetim = 1
         if len(Timing) != 1: #v6 mode!
             try:
                 Xframe, oldfer = stabily(fps,Timing[1],oldframeting,oldfer)
@@ -204,7 +204,7 @@ def lvlcal(fps,Timings,seting):
             FreeC = Timing[0]
         Сounter = Сounter + 1 #сетчик таймингов
         Mior = Mior + int(Timing[0])
-        if ERRORFRAMETIM == 1 and v6mode == 1:
+        if errorframetim == 1 and v6mode == 1:
             print(translation("lvlcal:У вас кадры и тайминги не совпадают>")+ str(Сounter-1))
             return 0
     if v6mode == 1:
@@ -393,7 +393,7 @@ def Victors(lvl):
 standard = settingfiles("read","fps",1) #фпс по умолчанию
 autoclear = settingfiles("read", "clear", 1) #какой режим чистки
 KZbalance = settingfiles("read", "lvlbanace", 1)
-TPS = int(standard) #Переносится стандартный фпс в переменную где с ним будут работать.
+tps = int(standard) #Переносится стандартный фпс в переменную где с ним будут работать.
 
 def lvlcheck(lvl):
     scan = 0
@@ -1117,9 +1117,9 @@ def vido(fps,tim): #делает по datapp счетчик
 def altaver(color): # версия
     match color:
         case 'color':
-            return f'{Fore.CYAN}ALTA v6.7_1{Fore.RESET}'
+            return f'{Fore.CYAN}ALTA v6.8{Fore.RESET}'
         case 'BW':
-            return 'ALTA v6.7_1'
+            return 'ALTA v6.8'
 
 
 def clinker(timing,frame): #ну из название понятно что оно делает
@@ -1162,6 +1162,7 @@ def ALTACODE(filecode): #выполняет скрипты
         print(translation("alta.code:файл не найден"))
         return 0
     datas = ''
+    counter = 0
     while datas.rstrip("\n") != "end": #дробить на строки где команда и аргументы
         datas = code.readline().rstrip("\n")
         comand = datas[:3] #команды могут быть ток из трех букв!!
@@ -1192,9 +1193,12 @@ def ALTACODE(filecode): #выполняет скрипты
             case "chv":
                 lvlcha(name[0], "1", name[1])
             case "cht":
-                lvlcha(name[0],"2",name[2])
-                lvlcha(name[0],"3",name[1])
-                scanpplvl(name[0])
+                if name[1] != "0":
+                    lvlcha(name[0],"2",name[2])
+                    lvlcha(name[0],"3",name[1])
+                    scanpplvl(name[0])
+                else:
+                    print(translation("alta.code:cht в коде имел нулевой фпс... команда пропущена \n строка:" + str(counter)))
             case "adl":
                 addlvl(name[0],name[1],name[2],name[3],name[4],name[5],name[6])
             case "rpl":
@@ -1203,9 +1207,50 @@ def ALTACODE(filecode): #выполняет скрипты
                 clear("1")
             case "ext":
                 sys.exit()
+            case "del":
+                dellvl(name[0],0)
+        counter = counter + 1
     code.close()
     return 1
 
+def dellvl(name,arg):
+    if getinfolvl(name,"4") == 0:
+        print(translation("del.lvl:уровня и так нету"))
+        return 0
+    if len(Victors(name)) != 0:
+        print(translation("del.lvl:удалите всех викторов с уровня!"))
+        return 0
+    if arg == 1:
+        antidelete = random.randint(1000,9999)
+        try:
+            com = input(translation("Вы уверенны удалить уровень??(напишите в ответ>") + str(antidelete) + translation(") >") )
+        except KeyboardInterrupt:
+                sys.exit()
+        if com != str(antidelete):
+            print(translation("Неправильно!"))
+            return 0
+    data = open("Base/lvldatabase.altalvl", 'r')
+    lvls = data.read().split("\n")
+    data.close()
+    scan = 0
+    fist = 1
+    newdata = ""
+    for lvl in lvls:
+        if lvl == name or scan == 1:
+            scan = 1
+        else:
+            if fist == 0:
+                newdata = newdata +"\n"+ lvl
+            else:
+                newdata = lvl
+                fist = 0
+
+        if lvl == "end":
+            scan = 0
+    data = open("Base/lvldatabase.altalvl", 'w')
+    data.write(newdata)
+    data.close()
+    print(translation("Уровень удален!"))
 clear("0")
 print(translation("Версия ") + altaver("color") + translation(" от Prosto_Maksim"))
 print(translation("Для помощи напишите help"))
@@ -1255,6 +1300,7 @@ while 1 == 1:
                     print(translation("  add.vict - добавить игроку пройденный лвл"))
                     print(translation("  del.vict - Удалить пройденный лвл у игрока"))
                     print(translation("  add.lvl - добавить лвл в датабазу"))
+                    print(translation("  del.lvl - удалить уровень с дб"))
                     print(translation("  info.lvl - поиск и инфа о лвле"))
                     print(translation("  chatim - изменить тайминги у лвла(автоматом пересчитает и для игроков)"))
                     print(translation("  chaver - изменить верификатора(добавить/удалить) у лвла"))
@@ -1440,7 +1486,14 @@ while 1 == 1:
                     print(translation("\n 9.reb - rebal записывается в коде так \n 'rebal'"))
                     print(translation("\n 10.rpl - внутренная функция alta 'scanpplvl' \n пересчитает что связанно с написанным уровнем\nпример 'rpl vhk'"))
                     print(translation("\n 11.cls - clear записывается в коде так \n 'cls'"))
-                    print(translation("\n 12.end - обязательное окончание скипта"))
+                    print(translation("\n 12.del - del.lvl записывается в коде так \n 'del уровень'\nпример 'del vhk (капчу не требует)'\n!Внимание уровень нельзя удалить если на нем есть викторы!"))
+                    print(translation("\n 13.end - обязательное окончание скипта"))
+                case "del.lvl":
+                    print(translation("del.lvl - удаляет уровень с дб"))
+                    print(translation("для удаления нужно начало удалить всех викторов с него"))
+                    print(translation("Для этого водим"))
+                    print(translation(" 1.название уровня"))
+                    print(translation(" 2.пишем капчу"))
         case "clear":
             clear("1")
         
@@ -1452,17 +1505,17 @@ while 1 == 1:
         case "fps": #Выбор кастом фпс
             try:
                 if auto == 3: #если только команда
-                    TPS = int(input(">>"))
+                    tps = int(input(">>"))
                 else: #если с ней что-то еще написано
-                    TPS = int(requirements)   #Выбирает последную из всего массива и считает как за выбранный фпс
+                    tps = int(requirements)   #Выбирает последную из всего массива и считает как за выбранный фпс
             except ValueError: #защита от идиота
                 print(translation("fps:Ты точно ввел фпс?"))
             except KeyboardInterrupt:
                 sys.exit()
-            if TPS == 0: #cброс
+            if tps == 0: #cброс
                 print(translation("сброшено!"))
-                TPS = int(standard)
-            print(translation("Фпс поставлен на ") + str(TPS))
+                tps = int(standard)
+            print(translation("Фпс поставлен на ") + str(tps))
         
         case "fps.set":
             try:
@@ -1505,9 +1558,9 @@ while 1 == 1:
         
         case "lvlcal":
             if auto == 6:#если только команда
-                lvlcal(TPS,"0",KZbalance)
+                lvlcal(tps,"0",KZbalance)
             else: #если с ней что-то еще написано
-                lvlcal(TPS,requirements,KZbalance) #Выбирает последную из всего массива и считает как за тайминги
+                lvlcal(tps,requirements,KZbalance) #Выбирает последную из всего массива и считает как за тайминги
         
         case "exit": #выход из проги
             sys.exit()
@@ -1585,7 +1638,17 @@ while 1 == 1:
                 print(translation("add.pla:Ты точно ввел нужное?"))
             except KeyboardInterrupt:
                 sys.exit()
-        
+        case "del.lvl":
+            try:
+                if auto == 7: #если только команда
+                    com = input(">>")
+                    dellvl(com,1)
+                else: #если с ней что-то еще написано
+                    dellvl(requirements,1)
+            except ValueError: #защита от идиота
+                print(translation("del.lvl:Ты точно ввел нужное?"))
+            except KeyboardInterrupt:
+                sys.exit()        
         case "info.pla":
             try:
                 if auto == 8: #если только команда
@@ -1607,9 +1670,9 @@ while 1 == 1:
             try:
                 if auto == 6: #если только команда
                     com = input(">>")
-                    balanceKZ(TPS,legacytranslat(com),"0")
+                    balanceKZ(tps,legacytranslat(com),"0")
                 else: #если с ней что-то еще написано
-                    balanceKZ(TPS,legacytranslat(requirements),"0")
+                    balanceKZ(tps,legacytranslat(requirements),"0")
             except ValueError: #защита от идиота
                 print(translation("balcal:Ты точно ввел нужное?"))
             except KeyboardInterrupt:
@@ -1618,9 +1681,9 @@ while 1 == 1:
             try:
                 if auto == 4: #если только команда
                     com = input(">>")
-                    freme(TPS,com)
+                    freme(tps,com)
                 else: #если с ней что-то еще написано
-                    freme(TPS,requirements)
+                    freme(tps,requirements)
             except ValueError: #защита от идиота
                 print(translation("frep:Ты точно ввел нужное?"))
             except KeyboardInterrupt:
@@ -1634,7 +1697,7 @@ while 1 == 1:
             com = input(translation("Какой лвл?>")).lower()
             com3 = input(translation("Какой фпс?(0 если обычный)"))
             if com3 == "0" or com3 == "": #Если ничего то обычный фпс
-                com3 = TPS
+                com3 = tps
             com2 = input(translation("Какие тайминги?>"))
             if lvlcal(com3,com2,"2") != 0:
                 try:
@@ -1696,9 +1759,9 @@ while 1 == 1:
         case "helper.vido":
             if auto == 11:
                 com = input(translation("Вставьте тайминги>"))
-                vido(TPS,com)
+                vido(tps,com)
             else:
-                vido(TPS,requirements)
+                vido(tps,requirements)
         case "clinker":
             com = input(translation("Тайминги>"))
             com3 = input(translation("промежутки>"))
