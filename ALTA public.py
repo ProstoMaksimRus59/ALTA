@@ -1131,9 +1131,9 @@ def vido(fps,tim): #делает по datapp счетчик
 def altaver(color): # версия
     match color:
         case 'color':
-            return f'{Fore.CYAN}alta v6.9_1{Fore.RESET}'
+            return f'{Fore.CYAN}ALTA v6.9_2{Fore.RESET}'
         case 'BW':
-            return 'alta v6.9_1'
+            return 'ALTA v6.9_2'
 
 
 def clinker(timing,frame): #ну из название понятно что оно делает
