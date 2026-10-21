@@ -496,7 +496,7 @@ def infolvl(lvl):
                 lvlinfo = data.readline().rstrip('\n').lower()
                 if lvlinfo.split(":")[0] != "timings":
                     print(lvlinfo)
-                else:
+                elif len(lvlinfo.split("-")) != 1:
                     Timingscolor = ''
                     Counter = 0
                     timings = lvlinfo.split(":")[1]
@@ -507,6 +507,8 @@ def infolvl(lvl):
                         Timingscolor = f'{Timingscolor}{Fore.RED}{timing[0]}{Fore.RESET}-{Fore.GREEN}{timing[1]}{Fore.RESET}'
                         Counter = 1
                     print("timings:" + Timingscolor)
+                else:
+                    print(lvlinfo)
                 scan = 1
                 good = 1
         if lvlscan == "":
@@ -1129,9 +1131,9 @@ def vido(fps,tim): #делает по datapp счетчик
 def altaver(color): # версия
     match color:
         case 'color':
-            return f'{Fore.CYAN}ALTA v6.9{Fore.RESET}'
+            return f'{Fore.CYAN}alta v6.9_1{Fore.RESET}'
         case 'BW':
-            return 'ALTA v6.9'
+            return 'alta v6.9_1'
 
 
 def clinker(timing,frame): #ну из название понятно что оно делает
