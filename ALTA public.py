@@ -494,7 +494,19 @@ def infolvl(lvl):
             while info != 7:
                 info = info + 1
                 lvlinfo = data.readline().rstrip('\n').lower()
-                print(lvlinfo)
+                if lvlinfo.split(":")[0] != "timings":
+                    print(lvlinfo)
+                else:
+                    Timingscolor = ''
+                    Counter = 0
+                    timings = lvlinfo.split(":")[1]
+                    for timing in timings.split(";"):
+                        timing = timing.split("-")
+                        if Counter != 0:
+                            Timingscolor = f'{Timingscolor};'
+                        Timingscolor = f'{Timingscolor}{Fore.RED}{timing[0]}{Fore.RESET}-{Fore.GREEN}{timing[1]}{Fore.RESET}'
+                        Counter = 1
+                    print("timings:" + Timingscolor)
                 scan = 1
                 good = 1
         if lvlscan == "":
@@ -1117,9 +1129,9 @@ def vido(fps,tim): #делает по datapp счетчик
 def altaver(color): # версия
     match color:
         case 'color':
-            return f'{Fore.CYAN}ALTA v6.8{Fore.RESET}'
+            return f'{Fore.CYAN}ALTA v6.9{Fore.RESET}'
         case 'BW':
-            return 'ALTA v6.8'
+            return 'ALTA v6.9'
 
 
 def clinker(timing,frame): #ну из название понятно что оно делает
@@ -1140,12 +1152,14 @@ def clinker(timing,frame): #ну из название понятно что о�
     return linker
 
 def stabily(fps,timing,oldtimings,oldfec): #функция v6 для промежутков
-    if oldtimings[1] != 0:
+    if oldtimings[0] != 0: 
         Fmc = 1000 / (int(fps) / int(timing))
-        reul = (round(float(Fmc),5) - round(oldtimings[0],5)) % 2
+        reulpath = [0,0,0] #сделана для будущего=
+        if oldtimings[1] != 0: #запускается тоесь поноценно расчеты ток с 3 клика.
+            reulpath[0] = (round(float(Fmc),5) - round(oldtimings[0],5)) % 2
+        reul = reulpath[0]
         ref = (round(float(Fmc),5) - round(oldtimings[0],5)) // 2
-        oldlogia = oldfec
-        if abs(oldlogia - ref) <= 6:
+        if abs(oldfec - ref) <= 6:
             reul = 0
         if reul < 0:
             reul = 0
