@@ -7,7 +7,7 @@
 
 **Математический расчет сложности для Geometry Dash**
 
-C Osu!(https://github.com/ppy) подобным методом
+C Osu!(https://github.com/ppy) подобным методом (pp like system in geometry dash / pp подробная система в geometry dash)
 
 Для ее работы(расчета сложности) нужна заранее устоновленный какой-то "Frame step и frame counter" Можно от EclipseMenu(https://github.com/EclipseMenu/)
 
