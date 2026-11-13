@@ -382,7 +382,7 @@ def Victors(lvl):
         data = open("Base/" + file, 'r')
         while Scan != "0":
             Scan = data.readline().rstrip('\n')
-            Scan = Scan.split(":")[0]
+            Scan = Scan.rsplit(":",1)[0]
             if Scan.lower() == lvl.lower():
                 print(file.split(".altapl")[0] + ",", end=" ") #Вывод всех у кого есть лвл в пройденных
                 all.append(file.split(".altapl")[0])
@@ -1131,9 +1131,9 @@ def vido(fps,tim): #делает по datapp счетчик
 def altaver(color): # версия
     match color:
         case 'color':
-            return f'{Fore.CYAN}ALTA v6.9_2{Fore.RESET}'
+            return f'{Fore.CYAN}ALTA v6.9_3{Fore.RESET}'
         case 'BW':
-            return 'ALTA v6.9_2'
+            return 'ALTA v6.9_3'
 
 
 def clinker(timing,frame): #ну из название понятно что оно делает
