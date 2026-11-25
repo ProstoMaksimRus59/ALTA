@@ -1,4 +1,4 @@
-import sys, re, os, shutil, random, zipfile, statistics, math
+import sys, re, os, shutil, random, statistics, math
 from colorama import Fore
 def translation(text): #функция перевода(; - коментарий который если он первый, то оно не будет считатся как перевод) \n - так же работает.
     try:
@@ -22,6 +22,7 @@ if os.name != "nt": #уже давно не поверял под линукс �
     print(translation("ALTA не проверяется под linux и других системах"))
     print(translation("Если она вылетает то пишите ко мне Prosto_Maksim"))
     input(translation("Enter - для продолжения..."))
+
 def clear(mode): #Ну даже не знаю??? что это делает??? :D
     os.system('cls' if os.name == 'nt' else 'clear') 
     if mode != "0": #Если не авто чистка, то показать версию.
@@ -88,23 +89,62 @@ def Placal(folder,data): #Писал пиздец давно, так-что по
                 if data == "0":
                     print(translation("все!"))
                 file.close()
+
+def speedframe(fps,frame,oldframe):
+    if oldframe[0] == 0:
+        return 0
+    mod = 50
+    Fmc = 1000 / (int(fps) / frame)
+    reul = (mod / (Fmc - (oldframe[0])))
+    if reul <= 0:
+        return 0
+    if (Fmc - oldframe[0]) >= 50:
+        return 0
+    elif (Fmc - oldframe[0]) >= 34:
+        reul = reul / 20
+    elif (Fmc - oldframe[0]) >= 17:
+        reul = reul / 10
+    else:
+        reul = reul / 5 
+    return reul
 def lvlcal(fps,Timings,seting):
+
+    #сохраняет передущие значение для Xframe
     oldfer = 0
+
+    #отвечает за запуск v6
     v6mode = 0
+    
+    #константы
     Referencepoint = 5000
     ReferencepointFRAME = 10000
+    ReferencepointSPEED = 5000
+    
+    #множители для 240 120 и 80 фп
     СounterH = [0,0,0]
+    
     Сounter = 0 #Сетчик таймингов
-    HardestC = 99999999 #Сетчик самого сложного тайминга
-    Mior = 0 #ср тайминг
+    
+    #считает средние, самый сложный и самый простой(на расчет пп не влияет)
+    Mior = 0
+    HardestC = 99999999
     FreeC = 0
+    
+    #базовые баллы которые после расчетов станут pp
     point = 0
+    
+    #это чтобы и в легаси и в v6 значение было похожими
     Compression = 16.797
     v6com = 36.0078
-    Mior = 0
+    
+    #память для передущих промежутков
     oldframeting = [0,0]
+    
     Timingscolor = ''
-    Xframe = 0
+    
+    Xframe = 0 #множители которые от промежутков работают
+    XSpeed = 0
+    Xsloww = 0
     errorframetim = 0
     if Timings == "0": #если ничего нет, то повторно попросить вести тайминги.
         print(translation("\nПометка - Если тайминг такой например - невидимый вейв\n(тоесь слепой 100%) то перед таймингом писать '?'"))
@@ -137,8 +177,12 @@ def lvlcal(fps,Timings,seting):
         if len(Timing) != 1: #v6 mode!
             try:
                 Xframe, oldfer = stabily(fps,Timing[1],oldframeting,oldfer)
+                XSpeed = speedframe(fps,(int(Timing[1]) + int(Timing[0])),oldframeting)
             except ValueError:
                 print(translation("lvlcal:Это точно кадр? > -") + str(Timing[1]) + translation("; / Номер - ") + str(Сounter))
+                return 0
+            except ZeroDivisionError:
+                print(translation("lvlcal:Назад в будуще? > -")  + str(Timing[1]) +";"+ translation(" / Номер - ") + str(Сounter))
                 return 0
             v6mode = 1
             try:
@@ -180,17 +224,16 @@ def lvlcal(fps,Timings,seting):
         elif mc <= 15:
             mc = mc * (0.98**СounterH[2])
             СounterH[2] = СounterH[2] + 1
-
         if mc <= 20:
-            point = point + (Referencepoint + (ReferencepointFRAME * Xframe)) / ((mc/1.05)) #считаем баллы за время тайминга
+            point = point + (Referencepoint + (ReferencepointFRAME * Xframe) + (ReferencepointSPEED * XSpeed)) / ((mc/1.05)) #считаем баллы за время тайминга
         elif mc >=20 and mc <= 30: 
-            point = point + (Referencepoint + (ReferencepointFRAME * Xframe)) / (mc * (2))
+            point = point + (Referencepoint + (ReferencepointFRAME * Xframe) + (ReferencepointSPEED * XSpeed)) / (mc * (2))
         elif mc >= 30 and mc <= 60:
-            point = point + (Referencepoint + ((ReferencepointFRAME) * Xframe)) / (mc * (3))
+            point = point + (Referencepoint + (ReferencepointFRAME * Xframe) + (ReferencepointSPEED * XSpeed)) / (mc * (3))
         elif mc >= 60 and mc <= 65:
-            point = point + (Referencepoint) / (mc * (3.5))
+            point = point + (Referencepoint + (ReferencepointSPEED * XSpeed)) / (mc * (3.5))
         elif mc >= 65 and mc <= 70:
-            point = point + (Referencepoint) / (mc * (4.5))
+            point = point + (Referencepoint + (ReferencepointSPEED * XSpeed)) / (mc * (4.5))
         elif mc >= 70 and mc <= 100:
             point = point + (Referencepoint) / (mc * (6.0))
         elif mc >= 100 and mc <= 150:
@@ -210,7 +253,7 @@ def lvlcal(fps,Timings,seting):
     if v6mode == 1:
         result = point / v6com
         if Fmc > 29999:
-            typelvl = "demon"
+            typelvl = "demon" #кста я под демоны не делаю алту.. если она выдала хрен в банке. ну это еще повезло
         else:
             typelvl = "challenge"
     else:
@@ -618,59 +661,6 @@ def addpla(pla):
 
 
 
-def loaddb():
-    files = os.listdir() #Проверка на наличие уже датабазы
-    for scan in files:
-        if scan == "Base": #если есть то -
-            antidelete = random.randint(1000,9999)
-            try:
-                com = input(translation("Вы уверенны удалить старую базу??(напишите в ответ>") + str(antidelete) + translation(") >") )
-            except KeyboardInterrupt:
-                sys.exit()
-            if com == str(antidelete):
-                shutil.rmtree("Base")
-                print(translation("Датабаза удаленна!"))
-            else:
-                print(translation("Неправильно!"))
-                return 0
-    try:
-        db = input(translation("Перетащите датабазу сюда>")).replace('"', '')
-    except KeyboardInterrupt:
-        sys.exit()
-    try:
-        zip = zipfile.ZipFile(db, 'r')
-    except FileNotFoundError:
-        print(translation("Не найденно"))
-        return 0
-    zip.extractall('')
-    zip.close()
-    print(translation("Датабаза загружена!"))
-
-
-
-def savedb(name,folder):
-    if name == "0" and folder == "0":
-        try:
-            name = input(translation("Название>"))
-            folder = input(translation("Куда создать?(путь до любой папки)>")).replace('"', '')
-        except KeyboardInterrupt:
-            sys.exit()
-    zip = zipfile.ZipFile(name +".zip", "w") #Создает архив
-    try:
-        zip.write("Base") #Создает папку в нем
-    except FileNotFoundError:
-        print(translation("save.db:Датабаза не найдена"))
-        return 0
-    files = os.listdir("Base/") #Смотрит что у вас в базе
-    
-    for scan in files: #Смотрит что у вас в базе
-        zip.write("Base/" + scan) #что нашел в ахрив
-    
-    zip.close() #закрывает ахрив
-    shutil.copyfile(name + ".zip", folder + "/"+ name + ".zip") #копирует куда нужно
-    os.remove(name + ".zip") #Удалает уже ненужный ахрив
-    print(translation("Датабаза сохранена!"))
-
 
 
 def infopla(pla):
@@ -744,9 +734,8 @@ def plalvlcomm(requirements): #Для безопастности вынес эт
 
 
 def tophelper(plaer):
-        
         hardest = 1 #по название доложно понятно быть)
-        folder = "base/" + plaer.replace('"', '')
+        folder = "Base/" + plaer.replace('"', '')
         file = open(folder, 'r')
         pp = 0
         Scan = 1
@@ -929,7 +918,10 @@ def scanallvl(): #Ищет все лвла
         if (cout % 9) == 0: #если что-то хочу добавить в дб!!!
             alllvl.append(scan.rstrip("\n"))
         cout = cout + 1
-        scan = lvls[cout]
+        try:
+            scan = lvls[cout]
+        except IndexError:
+            return alllvl
     return alllvl
 
 
@@ -1131,9 +1123,9 @@ def vido(fps,tim): #делает по datapp счетчик
 def altaver(color): # версия
     match color:
         case 'color':
-            return f'{Fore.CYAN}ALTA v6.9_3{Fore.RESET}'
+            return f'{Fore.CYAN}ALTA v7.0{Fore.RESET}'
         case 'BW':
-            return 'ALTA v6.9_3'
+            return 'ALTA v7.0'
 
 
 def clinker(timing,frame): #ну из название понятно что оно делает
@@ -1173,7 +1165,7 @@ def stabily(fps,timing,oldtimings,oldfec): #функция v6 для проме�
 def ALTACODE(filecode): #выполняет скрипты
     try:
         filecode = filecode.replace('"', '')
-        code = open(filecode,'r')
+        code = open(filecode,'r',encoding='utf-8')
     except FileNotFoundError:
         print(translation("alta.code:файл не найден"))
         return 0
@@ -1225,10 +1217,80 @@ def ALTACODE(filecode): #выполняет скрипты
                 sys.exit()
             case "del":
                 dellvl(name[0],0)
+            case "pri":
+                print(name[0])
         counter = counter + 1
     code.close()
     return 1
 
+
+
+def savedb(name,folder):
+    alllvl = scanallvl()
+    files = open(name + ".altadb", 'w',encoding='utf-8')
+    placheck = os.listdir("Base")
+    altapl = list(filter(lambda x: x.endswith('.altapl'), placheck))    
+    dblvl = open("Base/lvldatabase.altalvl",'r')
+    files.write(dblvl.read())
+    dblvl.close()
+    files.write("playrs:\n")
+    for plar in altapl:
+        filespla = open("Base/"+plar,'r')
+        files.write("\n"+plar+'\n')
+        files.write(filespla.read())
+        filespla.close()
+    files.write("\n")
+    files.close()
+    try:
+        shutil.copyfile(name + ".altadb", folder + "/"+ name + ".altadb") #копирует куда нужно
+    except FileNotFoundError:
+        print(translation("папку которую вы пытались сохранить, или с правами админа или ее не существует"))
+        print(translation("Датабаза сохранена!, но рядом с ALTA"))
+        return 0
+    except shutil.SameFileError:
+        print(translation("Датабаза сохранена!"))
+        return 1
+    os.remove(name + ".altadb") #Удалает уже ненужный ахрив
+    print(translation("Датабаза сохранена!"))
+def loaddb(folder):
+    try:
+        file = open(folder,'r',encoding='utf-8')
+    except FileNotFoundError:
+        print(translation("Не найденно"))
+        return 0
+    data = file.read()
+    file.close()
+    lvland = data.split("playrs:\n")
+    files = os.listdir() #Проверка на наличие уже датабазы
+    for scan in files:
+        if scan == "Base": #если есть то -
+            antidelete = random.randint(1000,9999)
+            try:
+                com = input(translation("Вы уверенны удалить старую базу??(напишите в ответ>") + str(antidelete) + translation(") >") )
+            except KeyboardInterrupt:
+                sys.exit()
+            if com == str(antidelete):
+                shutil.rmtree("Base")
+                print(translation("Датабаза удаленна!"))
+            else:
+                print(translation("Неправильно!"))
+                return 0
+    os.mkdir("Base")
+    file = open("Base/lvldatabase.altalvl",'w')
+    file.write(lvland[0])
+    file.close()
+    for plar in lvland[1].split(".altapl\n"):
+        filename = plar.split("\n")[0] + ".altapl"
+        filedata = plar.split("\n")[:-1]
+        if filename !=".altapl":
+            player = open("Base/" +filename,'w')
+            for data in filedata:
+                if data == '0':
+                    player.write(data)
+                else:
+                    player.write(data+"\n")
+            player.close()
+    print(translation("Датабаза загружена!"))
 def dellvl(name,arg):
     if getinfolvl(name,"4") == 0:
         print(translation("del.lvl:уровня и так нету"))
@@ -1331,7 +1393,7 @@ while 1 == 1:
                     print(translation("!Внимание виктор и верифер не как сами не свазываются! если кто-то верифнул лвл, добавьте отдельно как верифер и как виктор!"))
                 case "3":
                     print(translation(" Доп:"))
-                    print(translation("  conv - конвертер c старого формата 12354 в новый формат 1;2;3;5;4 таймингов"))
+                    print(translation("  conv - конвертер c старого формата 12354(до v3.0) в новый формат 1;2;3;5;4 таймингов"))
                     print(translation("  clear - очистить комадную строку"))
                     print(translation("  clear.auto - оставляет в командной строке только последнюю команду"))
                     print(translation("  lvlcal.bal - встраивает в измерения lvlcal и balcal"))
@@ -1436,9 +1498,9 @@ while 1 == 1:
                 case "top":
                     print(translation("Команда top -l(все лвла),-ver(все верифнутые лвла), -p(игроки) - Сортирует игроков или лвла по пп и делает топ"))
                 case "load.db":
-                    print(translation("Команда load.db - дает загружить датабазу из файла(zip)"))
+                    print(translation("Команда load.db - дает загружить датабазу из файла(altadb)"))
                     print(translation("  Для Загрузки он удалить старую базу(для защиты он попросить вести капчу)"))
-                    print(translation("  После этого он попросить кинуть в окно программы файл датабазы(zip)"))
+                    print(translation("  После этого он попросить кинуть в окно программы файл датабазы(altadb)"))
                     print(translation("  И он загружить ее"))
                 case "save.db":
                     print(translation("Комадна save.db - дает сохранить базу, чтоб потом можно было загружить через load.db"))
@@ -1451,7 +1513,7 @@ while 1 == 1:
                 case "delete.db":
                     print(translation("Комадна delete.db - удалить датабазу(попросить вести капчу)"))
                 case "conv":
-                    print(translation("conv - Если у вас остались тайминги от старых версий ALTA, где тайминги были максимум до 9 кадров"))
+                    print(translation("conv - Если у вас остались тайминги от старых версий ALTA(до v3.0), где тайминги были максимум до 9 кадров"))
                 case "clear":
                     print(translation("Чистить консоль"))
                 case "clear.auto":
@@ -1503,7 +1565,8 @@ while 1 == 1:
                     print(translation("\n 10.rpl - внутренная функция alta 'scanpplvl' \n пересчитает что связанно с написанным уровнем\nпример 'rpl vhk'"))
                     print(translation("\n 11.cls - clear записывается в коде так \n 'cls'"))
                     print(translation("\n 12.del - del.lvl записывается в коде так \n 'del уровень'\nпример 'del vhk (капчу не требует)'\n!Внимание уровень нельзя удалить если на нем есть викторы!"))
-                    print(translation("\n 13.end - обязательное окончание скипта"))
+                    print(translation("\n 13.pri - просто выводить сообщение в консоль \n 'pri привет, мир' в коносле появится 'привет, мир' \n !он не может выводить другие команды!"))
+                    print(translation("\n 14.end - обязательное окончание скипта"))
                 case "del.lvl":
                     print(translation("del.lvl - удаляет уровень с дб"))
                     print(translation("для удаления нужно начало удалить всех викторов с него"))
@@ -1677,11 +1740,21 @@ while 1 == 1:
                 sys.exit()
         
         case "load.db":
-            loaddb()
-        
+            try:
+                if auto == 7: #если только команда
+                    com = input(translation("Скиньте файл .altadb>"))
+                    loaddb(com.replace('"', ''))
+                else:
+                    loaddb(requirements.replace('"', ''))
+            except KeyboardInterrupt:
+                sys.exit()
         case "save.db":
-            savedb('0','0')
-        
+            try:
+                com = input(translation("Название файла>"))
+                com2 = input(translation("Куда создать?(путь до любой папки)>")).replace('"', '')
+                savedb(com,com2)
+            except KeyboardInterrupt:
+                sys.exit()
         case "balcal":
             try:
                 if auto == 6: #если только команда
